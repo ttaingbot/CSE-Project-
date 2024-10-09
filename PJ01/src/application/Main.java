@@ -84,7 +84,7 @@ public class Main {
 	}
 	
 	// the goal of this function is to check that the inputted line is a single char of a type allowed
-	// returns a boolean if the char follows all of the required conditions
+	// returns a boolean if the char follows all of required conditions
 	public static boolean checkChar(Scanner scanner, String allowed, String input) {
 		
 		
