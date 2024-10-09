@@ -6,7 +6,7 @@ public class User {
 	// user account information
 	String email;
 	String username;
-	String password; // says non-string data type in requirements but idk what the project means by that
+	String password; // says non-string data type in requirements but not sure what the project means by that
 	boolean oneTimePassword;
 	DateTimeFormatter oneTimeValid;
 	String firstName;

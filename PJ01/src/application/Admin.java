@@ -2,7 +2,7 @@ package application;
 
 public class Admin extends User {
 	
-	// constructor
+	// default constructor
 	public Admin(){
 		super();
 	}
