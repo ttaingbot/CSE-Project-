@@ -3,10 +3,15 @@ package application;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import edu.asu.DatabasePart1.DatabaseHelper;
+
+import java.sql.SQLException;
+
 public class Main {
 	private static ArrayList<User> users;
 	
-	
+	//initialize the database helper
+	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
 	
 	public static void setPassword(Scanner scanner, User user) {
 		// variables to hold two passwords for comparison - if they are equal then change the password
