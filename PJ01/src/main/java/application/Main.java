@@ -2,10 +2,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import edu.asu.DatabasePart1.DatabaseHelper;
-
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Main {
 	private static ArrayList<User> users;
