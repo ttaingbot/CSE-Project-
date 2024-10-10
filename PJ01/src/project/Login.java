@@ -1,14 +1,22 @@
-package application;
+package project;
 
 import java.util.ArrayList;
+
 import java.util.Scanner;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.application.Application;
+
 import java.sql.*;
 
-public class Main {
+public class Login extends Application{
 	private static ArrayList<User> users;
 	
-	//initialize the database helper
-	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
 	
 	public static void setPassword(Scanner scanner, User user) {
 		// variables to hold two passwords for comparison - if they are equal then change the password
@@ -209,8 +217,27 @@ public class Main {
 		
 	}
 	
+	public void start(Stage loginScreen) {
+    	System.out.println("Starting Login");
+        loginScreen.setTitle("Login Screen");
+        
+        Button btn = new Button();
+        btn.setText("Display: 'Login as'");
+        btn.setOnAction(new EventHandler<>() {
+            public void handle(ActionEvent event) {
+                System.out.println("ASU: Hello World!");
+            }
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+        loginScreen.setScene(new Scene(root, 300, 250));
+        loginScreen.show();
+    }
 	
 	public static void main(String[] args) {
+		launch(args);
+		/*
 		Scanner scanner = new Scanner(System.in);
 		users = new ArrayList<User>();
 		Admin firstAdmin = new Admin();
@@ -234,11 +261,8 @@ public class Main {
 		System.out.println("New Account Created! Logging you out.");
 		loginScreen(scanner);
 		
-		
-		
-		
-		
 		scanner.close();
+		*/
 	}
 	
 }
