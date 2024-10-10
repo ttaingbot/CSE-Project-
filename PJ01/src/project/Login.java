@@ -490,7 +490,7 @@ public class Login extends Application{
 			GridPane gridPane = new GridPane();
 			gridPane.setAlignment(Pos.CENTER);
 			
-			gridPane.setPadding(new Insets(5,5,5,5));
+			gridPane.setPadding(new Insets(9,9,9,9));
 			gridPane.setHgap(10);
 			gridPane.setVgap(10);
 			bPane.setCenter(gridPane);
@@ -505,7 +505,7 @@ public class Login extends Application{
 			TextField role = new TextField(" a, s or i");
 			
 			//create a new textfield for a response
-			TextField response = new TextField("");
+			TextField response = new TextField("Awaiting Input");
 			
 			// create a stack pane
 	        StackPane adminWindow = new StackPane();
@@ -553,9 +553,9 @@ public class Login extends Application{
 		      {
 		    	  //set the one time password
 		    	  if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
-		    		  System.out.print("otpppppp");
+		    		  //System.out.print("otpppppp");
 		    	  OTP = Math.random()*1000000;
-		    	  code.appendText(String.valueOf(OTP));
+		    	  code.setText(String.valueOf(OTP));
 		    	  OTPR = role.getText().charAt(0);
 		    	  }
 		      }
@@ -569,7 +569,10 @@ public class Login extends Application{
 		    		  if(users.get(i).username.equals(user.getText())){
 		    			  kill = true;
 		    			  tem = users.get(i);
-		    			  response.appendText("User Found!");
+		    			  response.setText("User Found! Type Yes here to confirm");
+		    		  }
+		    		  if(i == users.size()) {
+		    			  response.setText("User not found");
 		    		  }
 		    	  }
 		    }); 
@@ -577,10 +580,13 @@ public class Login extends Application{
 			//delete selected user
 			del.setOnAction((ActionEvent e) ->
 		    {
-		        if( kill == true) {
-		        	users.remove(users.indexOf(tem));
-		        	kill = false;
-		        }
+		    	if(response.getText().equals("Yes")) {
+			        if( kill == true) {
+			        	users.remove(users.indexOf(tem));
+			        	kill = false;
+			        	response.setText("User Deleted");
+			        }
+		    	}
 		    });
 			
 			//close the window
