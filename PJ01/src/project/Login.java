@@ -21,8 +21,14 @@ import javafx.geometry.Pos;
 import java.sql.*;
 
 public class Login extends Application{
+	//initiallize global variables
+	User tem = new User();
 	int sceneIndex = 0;
+	double OTP;
+	char OTPR;
+	boolean kill = false;
 	private static ArrayList<User> users;
+
 	
 	
 	public static void setPassword(Scanner scanner, User user) {
@@ -225,7 +231,7 @@ public class Login extends Application{
 	}
 	
 
-	//initial login screen for first login/user
+	//Scene logic for going between screens
 	public void start(Stage MainScreen) {
 		Stage startScreen = new Stage();
 		//initial startup screen
@@ -237,6 +243,15 @@ public class Login extends Application{
 			}
 			else if(sceneIndex == 2) {
 				menu(startScreen);
+			}
+			else if(sceneIndex == 3) {
+				adminMenu(startScreen);
+			}
+			else if(sceneIndex == 4) {
+				//userMenu(startScreen);
+			}
+			else if(sceneIndex == 5) {
+				OTPMenu(startScreen);
 			}
 			else {
 				System.out.print("goodbye!");
@@ -252,7 +267,7 @@ public class Login extends Application{
     	startScreen.setTitle("Login Screen");
         
         Button btn = new Button();
-        btn.setText("Display: 'Create admin'");
+        btn.setText("Create admin");
         btn.setOnAction(new EventHandler<>() {
             public void handle(ActionEvent event) {
                 sceneIndex = 1;
@@ -260,7 +275,9 @@ public class Login extends Application{
                 startScreen.close();
             }
         });
-        
+        //create the arraylist of users
+    	users = new ArrayList<User>();
+    	
         StackPane root = new StackPane();
         root.getChildren().add(btn);
         startScreen.setScene(new Scene(root, 300, 250));
@@ -323,7 +340,6 @@ public class Login extends Application{
  
         startScreen.show();
 		
-		users = new ArrayList<User>();
 		Admin firstAdmin = new Admin();
 		
 		sub.setOnAction(new EventHandler<ActionEvent>()
@@ -338,7 +354,7 @@ public class Login extends Application{
 	    		firstAdmin.username = adminUser.getText();
 	    		//set password to text
 	    		firstAdmin.password = adminPass.getText();
-	    		// adding 0 role (admin) to newly created user
+	    		// adding 2 role (admin) to newly created user
 	    		firstAdmin.roles.add('a');
 	    		// adding first user to list of usernames in system
 	    		users.add(firstAdmin);
@@ -350,9 +366,6 @@ public class Login extends Application{
 	        }
 	        else
 	        {
-	        	System.out.print(adminUser.getText());
-	        	System.out.print(adminPass.getText());
-	        	System.out.print(adminPassConf.getText());
 	        	System.out.print("Passwords don't match or username is empty!");
 	        }
 	      }
@@ -362,8 +375,8 @@ public class Login extends Application{
 	
 	//main menu screen with login with username or login with code
 	public void menu(Stage startScreen) {
-		System.out.println("Admin Login");
-		startScreen.setTitle("Admin login");
+		System.out.println("Menu");
+		startScreen.setTitle("Menu login");
 		
 		//initialize a grid setup for the windows
 		BorderPane bPane = new BorderPane();
@@ -424,27 +437,33 @@ public class Login extends Application{
 	      {
 	    	  //checks if user is in array
 	    	  for (int i = 0; i < users.size(); i++) {
-	    		  System.out.print(users.get(i).username);
-	    		  System.out.print(users.get(i).password);
 	    		  //if the user is found
 	    		  if(users.get(i).username.equals(user.getText())){
 	    			  //check if passwords match
 	    			  if(users.get(i).password.equals(pass.getText())) {
+	    				  System.out.print(users.get(i).roles.get(0));
 	    				  //check if the user is an admin and proceed to admin login
-	    				  if(users.get(i).currentRole == 'a')
+	    				  if(users.get(i).roles.get(0) == 'a')
 	    				  {
-	    					sceneIndex = 4;
-		    				  start(startScreen);
-		    				  startScreen.close();
+	    					sceneIndex = 3;
+		    				start(startScreen);
+		    				startScreen.close();
 	    				  }
 	    				  //if not an admin go to normal login
 	    				  else {
-		    				  sceneIndex = 5;
+		    				  sceneIndex = 4;
 		    				  start(startScreen);
 		    				  startScreen.close();
 	    				  }
 	    			  }
 	    		  }
+	  	        else if(code.getText().equals(String.valueOf(OTP)) && OTP != 0)
+		        {
+	  	        	OTP = 0;
+		  	        sceneIndex = 5;
+	  				start(startScreen);
+	  				startScreen.close();
+		        }
 	    		  else
 		    	  {
 	    			  //user not found
@@ -456,9 +475,218 @@ public class Login extends Application{
 		//close the window
 		close.setOnAction((ActionEvent e) ->
 	    {
-	        startScreen.close();      
+	       // startScreen.close();      
 	    }); 
 	}
+	
+	//Admin menu screen
+		public void adminMenu(Stage startScreen) {
+			System.out.println("Admin Menu");
+			startScreen.setTitle("Admin Menu");
+			
+			
+			//initialize a grid setup for the windows
+			BorderPane bPane = new BorderPane();
+			GridPane gridPane = new GridPane();
+			gridPane.setAlignment(Pos.CENTER);
+			
+			gridPane.setPadding(new Insets(5,5,5,5));
+			gridPane.setHgap(10);
+			gridPane.setVgap(10);
+			bPane.setCenter(gridPane);
+			
+			//create a new textfield for user select
+			TextField user = new TextField("");
+			
+			//create a new textfield for a OTP
+			TextField code = new TextField("");
+			
+			//create a new textfield for a OTP role
+			TextField role = new TextField(" a, s or i");
+			
+			//create a new textfield for a response
+			TextField response = new TextField("");
+			
+			// create a stack pane
+	        StackPane adminWindow = new StackPane();
+	        
+	        // add textfields
+	        adminWindow.getChildren().add(user);
+	        adminWindow.getChildren().add(code);
+	        adminWindow.getChildren().add(role);
+	        
+	        Scene sc = new Scene(bPane, 900, 500);
+	        
+	        //Create Labels
+	        Label t = new Label("User Select");
+	        Label one = new Label("One Time Code Gen");
+	        
+	        Button close = new Button("log out");
+	        Button gen = new Button("Generate");
+	        Button del = new Button("Delete");
+	        Button list = new Button("List Users");
+	        Button find = new Button("Find");
+
+	        gridPane.add(t, 1, 0);
+	        gridPane.add(response, 3, 0);
+	        gridPane.add(one, 1, 3);
+	        gridPane.add(user, 1, 2);
+	        gridPane.add(find, 2, 2);
+	        gridPane.add(code,1, 4);
+	        gridPane.add(close, 0, 4);
+	        gridPane.add(gen, 2, 4);
+	        gridPane.add(role, 4, 3);
+	        gridPane.add(del, 2, 3);
+	        gridPane.add(list, 3, 3);
+	        
+	        // set the scene
+	        startScreen.setScene(sc);
+	 
+	        startScreen.show();
+			
+			
+			gen.setOnAction(new EventHandler<ActionEvent>()
+		    {
+		      @Override      
+		      //when the generate button is pressed
+		      public void handle(ActionEvent e)
+		      {
+		    	  //set the one time password
+		    	  if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
+		    		  System.out.print("otpppppp");
+		    	  OTP = Math.random()*1000000;
+		    	  code.appendText(String.valueOf(OTP));
+		    	  OTPR = role.getText().charAt(0);
+		    	  }
+		      }
+		    });
+			//find button
+			find.setOnAction((ActionEvent e) ->
+		    {
+		    	//checks if user is in array
+		    	  for (int i = 0; i < users.size(); i++) {
+		    		  //if the user is found
+		    		  if(users.get(i).username.equals(user.getText())){
+		    			  kill = true;
+		    			  tem = users.get(i);
+		    			  response.appendText("User Found!");
+		    		  }
+		    	  }
+		    }); 
+			
+			//delete selected user
+			del.setOnAction((ActionEvent e) ->
+		    {
+		        if( kill == true) {
+		        	users.remove(users.indexOf(tem));
+		        	kill = false;
+		        }
+		    });
+			
+			//close the window
+			close.setOnAction((ActionEvent e) ->
+		    {
+		    	sceneIndex = 2;
+		    	start(startScreen);
+		        startScreen.close();      
+		    }); 
+			//close the window
+			list.setOnAction((ActionEvent e) ->
+		    {
+		    	for(int i = 0; i < users.size(); i++){
+		    		System.out.print(users.get(i).username + " " + users.get(i).roles.get(0) + "\n");
+		    	}
+		    }); 
+		}
+		
+		//OTP login screen for the very first user
+		public void OTPMenu(Stage startScreen) {
+			System.out.println("OTP Login");
+			startScreen.setTitle("OTP login");
+			
+			//initialize a grid setup for the windows
+			BorderPane bPane = new BorderPane();
+			GridPane gridPane = new GridPane();
+			gridPane.setAlignment(Pos.CENTER);
+			
+			gridPane.setPadding(new Insets(5,5,5,5));
+			gridPane.setHgap(10);
+			gridPane.setVgap(10);
+			bPane.setCenter(gridPane);
+			
+			//create a new textfield for admin username
+			TextField uUser = new TextField("");
+			
+			//create a new textfield for admin password
+			TextField uPass = new TextField("");
+			
+			TextField uPassConf = new TextField("");
+			
+			// create a stack pane
+	        StackPane uWindow = new StackPane();
+	        
+	        // add textfields
+	        uWindow.getChildren().add(uUser);
+	        uWindow.getChildren().add(uPass);
+	        
+	        Scene sc = new Scene(bPane, 900, 500);
+	        
+	      //Create Labels
+	        Label User = new Label("Username");
+	        Label Pass = new Label("Password");
+	        Label Pass2 = new Label("Password Confirm");
+	        
+	        Button back = new Button("Back");
+	        Button sub = new Button("Submit");
+	        
+
+	        //Add all controls to Grid
+	        gridPane.add(User, 0, 0);
+	        gridPane.add(Pass, 0, 1);
+	        gridPane.add(Pass2, 0, 2);
+	        gridPane.add(uUser, 1, 0);
+	        gridPane.add(uPass, 1, 1);
+	        gridPane.add(uPassConf,1, 2);
+	        gridPane.add(back, 0, 3);
+	        gridPane.add(sub, 2, 3);
+	        
+	        // set the scene
+	        startScreen.setScene(sc);
+	 
+	        startScreen.show();
+			
+			User userer = new User();
+			
+			sub.setOnAction(new EventHandler<ActionEvent>()
+		    {
+		      @Override      
+		      //when the submit button is pressed
+		      public void handle(ActionEvent e)
+		      {
+		    	  //check if passwords match and username isnt empty
+		        if(uPass.getText().equals(uPassConf.getText()) && User != null) {
+		        	//set username to text
+		        	userer.username = uUser.getText();
+		    		//set password to text
+		        	userer.password = uPass.getText();
+		    		// adding the otp role to newly created user
+		        	userer.roles.add(OTPR);
+		    		// adding first user to list of usernames in system
+		    		users.add(userer);
+		    		// displaying log out message and sending program to loginScreen
+		    		System.out.println("New Account Created! Logging you out.");
+		    		sceneIndex = 2;
+		    		start(startScreen);
+	                startScreen.close();
+		        }
+		        else
+		        {
+		        	System.out.print("Passwords don't match or username is empty!");
+		        }
+		      }
+		    });
+			
+		}
 	
 	public static void main(String[] args) {
 		launch(args);
