@@ -7,14 +7,21 @@ import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import java.sql.*;
 
 public class Login extends Application{
+	int sceneIndex = 0;
 	private static ArrayList<User> users;
 	
 	
@@ -217,52 +224,245 @@ public class Login extends Application{
 		
 	}
 	
-	public void start(Stage loginScreen) {
+
+	//initial login screen for first login/user
+	public void start(Stage MainScreen) {
+		Stage startScreen = new Stage();
+		//initial startup screen
+			if(sceneIndex == 0) {
+				initial(startScreen);
+			}
+			else if(sceneIndex == 1) {
+				login(startScreen);
+			}
+			else if(sceneIndex == 2) {
+				menu(startScreen);
+			}
+			else {
+				System.out.print("goodbye!");
+			}
+		
+        
+    }
+	
+	
+	//very first login screen to establish the 
+	public void initial(Stage startScreen) {
     	System.out.println("Starting Login");
-        loginScreen.setTitle("Login Screen");
+    	startScreen.setTitle("Login Screen");
         
         Button btn = new Button();
-        btn.setText("Display: 'Login as'");
+        btn.setText("Display: 'Create admin'");
         btn.setOnAction(new EventHandler<>() {
             public void handle(ActionEvent event) {
-                System.out.println("ASU: Hello World!");
+                sceneIndex = 1;
+                start(startScreen);
+                startScreen.close();
             }
         });
         
         StackPane root = new StackPane();
         root.getChildren().add(btn);
-        loginScreen.setScene(new Scene(root, 300, 250));
-        loginScreen.show();
-    }
+        startScreen.setScene(new Scene(root, 300, 250));
+        startScreen.show();
+	}
 	
-	public static void main(String[] args) {
-		launch(args);
-		/*
-		Scanner scanner = new Scanner(System.in);
+	//admin login screen for the very first user
+	public void login(Stage startScreen) {
+		System.out.println("Admin Login");
+		startScreen.setTitle("Admin login");
+		
+		//initialize a grid setup for the windows
+		BorderPane bPane = new BorderPane();
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		
+		gridPane.setPadding(new Insets(5,5,5,5));
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		bPane.setCenter(gridPane);
+		
+		//create a new textfield for admin username
+		TextField adminUser = new TextField("");
+		
+		//create a new textfield for admin password
+		TextField adminPass = new TextField("");
+		
+		TextField adminPassConf = new TextField("");
+		
+		// create a stack pane
+        StackPane adminWindow = new StackPane();
+        
+        // add textfields
+        adminWindow.getChildren().add(adminUser);
+        adminWindow.getChildren().add(adminPass);
+        
+        Scene sc = new Scene(bPane, 900, 500);
+        
+      //Create Labels
+        Label User = new Label("Username");
+        Label Pass = new Label("Password");
+        Label Pass2 = new Label("Password Confirm");
+        
+        Button back = new Button("Back");
+        Button sub = new Button("Submit");
+        
+
+        //Add all controls to Grid
+        gridPane.add(User, 0, 0);
+        gridPane.add(Pass, 0, 1);
+        gridPane.add(Pass2, 0, 2);
+        gridPane.add(adminUser, 1, 0);
+        gridPane.add(adminPass, 1, 1);
+        gridPane.add(adminPassConf,1, 2);
+        gridPane.add(back, 0, 3);
+        gridPane.add(sub, 2, 3);
+        
+        // set the scene
+        startScreen.setScene(sc);
+ 
+        startScreen.show();
+		
 		users = new ArrayList<User>();
 		Admin firstAdmin = new Admin();
 		
-		// initial login to set first user as admin
-		// reading first input, which is username
-		System.out.println("Hello first user, please enter in a username below: ");
-		firstAdmin.username = scanner.nextLine();
+		sub.setOnAction(new EventHandler<ActionEvent>()
+	    {
+	      @Override      
+	      //when the submit button is pressed
+	      public void handle(ActionEvent e)
+	      {
+	    	  //check if passwords match and username isnt empty
+	        if(adminPass.getText().equals(adminPassConf.getText()) && User != null) {
+	        	//set username to text
+	    		firstAdmin.username = adminUser.getText();
+	    		//set password to text
+	    		firstAdmin.password = adminPass.getText();
+	    		// adding 0 role (admin) to newly created user
+	    		firstAdmin.roles.add('a');
+	    		// adding first user to list of usernames in system
+	    		users.add(firstAdmin);
+	    		// displaying log out message and sending program to loginScreen
+	    		System.out.println("New Account Created! Logging you out.");
+	    		sceneIndex = 2;
+	    		start(startScreen);
+                startScreen.close();
+	        }
+	        else
+	        {
+	        	System.out.print(adminUser.getText());
+	        	System.out.print(adminPass.getText());
+	        	System.out.print(adminPassConf.getText());
+	        	System.out.print("Passwords don't match or username is empty!");
+	        }
+	      }
+	    });
 		
-		// getting password
-		setPassword(scanner, firstAdmin);
-		finishSettingUp(scanner, firstAdmin);
+	}
+	
+	//main menu screen with login with username or login with code
+	public void menu(Stage startScreen) {
+		System.out.println("Admin Login");
+		startScreen.setTitle("Admin login");
 		
-		// adding 0 role (admin) to newly created user
-		firstAdmin.roles.add('a');
+		//initialize a grid setup for the windows
+		BorderPane bPane = new BorderPane();
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
 		
-		// adding first user to list of usernames in system
-		users.add(firstAdmin);
+		gridPane.setPadding(new Insets(5,5,5,5));
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		bPane.setCenter(gridPane);
 		
-		// displaying log out message and sending program to loginScreen
-		System.out.println("New Account Created! Logging you out.");
-		loginScreen(scanner);
+		//create a new textfield for admin username
+		TextField user = new TextField("");
 		
-		scanner.close();
-		*/
+		//create a new textfield for admin password
+		TextField pass = new TextField("");
+		
+		TextField code = new TextField("");
+		
+		// create a stack pane
+        StackPane adminWindow = new StackPane();
+        
+        // add textfields
+        adminWindow.getChildren().add(user);
+        adminWindow.getChildren().add(pass);
+        adminWindow.getChildren().add(code);
+        
+        Scene sc = new Scene(bPane, 900, 500);
+        
+        //Create Labels
+        Label User = new Label("Username");
+        Label Pass = new Label("Password");
+        Label Pass2 = new Label("One Time Code");
+        
+        Button close = new Button("Close");
+        Button sub = new Button("Submit");
+
+        gridPane.add(User, 0, 0);
+        gridPane.add(Pass, 0, 1);
+        gridPane.add(Pass2, 0, 2);
+        gridPane.add(user, 1, 0);
+        gridPane.add(pass, 1, 1);
+        gridPane.add(code,1, 2);
+        gridPane.add(close, 0, 3);
+        gridPane.add(sub, 2, 3);
+        
+        // set the scene
+        startScreen.setScene(sc);
+ 
+        startScreen.show();
+		
+		
+		sub.setOnAction(new EventHandler<ActionEvent>()
+	    {
+	      @Override      
+	      //when the submit button is pressed
+	      public void handle(ActionEvent e)
+	      {
+	    	  //checks if user is in array
+	    	  for (int i = 0; i < users.size(); i++) {
+	    		  System.out.print(users.get(i).username);
+	    		  System.out.print(users.get(i).password);
+	    		  //if the user is found
+	    		  if(users.get(i).username.equals(user.getText())){
+	    			  //check if passwords match
+	    			  if(users.get(i).password.equals(pass.getText())) {
+	    				  //check if the user is an admin and proceed to admin login
+	    				  if(users.get(i).currentRole == 'a')
+	    				  {
+	    					sceneIndex = 4;
+		    				  start(startScreen);
+		    				  startScreen.close();
+	    				  }
+	    				  //if not an admin go to normal login
+	    				  else {
+		    				  sceneIndex = 5;
+		    				  start(startScreen);
+		    				  startScreen.close();
+	    				  }
+	    			  }
+	    		  }
+	    		  else
+		    	  {
+	    			  //user not found
+		    		  System.out.print("Invalid User!");
+		    	  }
+	    	  }
+	      }
+	    });
+		//close the window
+		close.setOnAction((ActionEvent e) ->
+	    {
+	        startScreen.close();      
+	    }); 
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+
 	}
 	
 }
