@@ -475,7 +475,7 @@ public class Login extends Application{
 		//close the window
 		close.setOnAction((ActionEvent e) ->
 	    {
-	       // startScreen.close();      
+	        startScreen.close();      
 	    }); 
 	}
 	
@@ -502,7 +502,7 @@ public class Login extends Application{
 			TextField code = new TextField("");
 			
 			//create a new textfield for a OTP role
-			TextField role = new TextField(" a, s or i");
+			TextField role = new TextField("Roles: a, s or i");
 			
 			//create a new textfield for a response
 			TextField response = new TextField("Awaiting Input");
