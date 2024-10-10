@@ -248,7 +248,7 @@ public class Login extends Application{
 				adminMenu(startScreen);
 			}
 			else if(sceneIndex == 4) {
-				//userMenu(startScreen);
+				userMenu(startScreen);
 			}
 			else if(sceneIndex == 5) {
 				OTPMenu(startScreen);
@@ -571,7 +571,7 @@ public class Login extends Application{
 		    			  tem = users.get(i);
 		    			  response.setText("User Found! Type Yes here to confirm");
 		    		  }
-		    		  if(i == users.size()) {
+		    		  if(kill == false) {
 		    			  response.setText("User not found");
 		    		  }
 		    	  }
@@ -693,6 +693,60 @@ public class Login extends Application{
 		    });
 			
 		}
+		
+		//OTP login screen for the very first user
+				public void userMenu(Stage startScreen) {
+					System.out.println("User Menu");
+					startScreen.setTitle("User Menu");
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label User = new Label("Welcome User");
+			        //logout button
+			        Button back = new Button("logout");
+			        
+
+			        //Add all controls to Grid
+			        gridPane.add(User, 0, 0);
+			        gridPane.add(back, 1, 0);
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+					
+					User userer = new User();
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  System.out.println("Logging you out.");
+				    		sceneIndex = 2;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
+				}
 	
 	public static void main(String[] args) {
 		launch(args);
