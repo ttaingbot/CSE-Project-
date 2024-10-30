@@ -259,6 +259,12 @@ public class Login extends Application{
 			else if(sceneIndex == 7) {
 				instrMenu(startScreen);
 			}
+			else if(sceneIndex == 8) {
+				//profMenu(startScreen);
+			}
+			else if(sceneIndex == 9) {
+				createArMenu(startScreen);
+			}
 			else {
 				System.out.print("goodbye!");
 			}
@@ -669,7 +675,7 @@ public class Login extends Application{
 	        Button back = new Button("Back");
 	        Button sub = new Button("Submit");
 	        
-
+	        
 	        //Add all controls to Grid
 	        gridPane.add(User, 0, 0);
 	        gridPane.add(Pass, 0, 1);
@@ -744,11 +750,16 @@ public class Login extends Application{
 			        Label User = new Label(String.format("Welcome User: %s", tem.username));
 			        //logout button
 			        Button back = new Button("logout");
+			        //prefences button
+			        Button prof = new Button("Edit Profile");
 			        
 
 			        //Add all controls to Grid
 			        gridPane.add(User, 0, 0);
-			        gridPane.add(back, 1, 0);
+			        
+			        //to be added, edit user email, pref name, etc
+			        //gridPane.add(prof, 1, 0);
+			        gridPane.add(back, 2, 0);
 			        
 			        // set the scene
 			        startScreen.setScene(sc);
@@ -770,9 +781,21 @@ public class Login extends Application{
 				      }
 				    });
 					
+					prof.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    		sceneIndex = 8;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
 				}
 				
-				//basic user menu
+				//basic instructor menu
 				public void instrMenu(Stage startScreen) {
 					System.out.println("Instructor Menu");
 					startScreen.setTitle(String.format("Instructor Menu: Logged in as, %s", tem.username));
@@ -840,7 +863,7 @@ public class Login extends Application{
 					
 				}
 				
-				//OTP login screen for the very first user
+				//main article menu to select what to do
 				public void artMenu(Stage startScreen) {
 					System.out.println("Article Menu");
 					startScreen.setTitle(String.format("Article Menu: Logged in as, %s", tem.username));
@@ -908,6 +931,118 @@ public class Login extends Application{
 					    		start(startScreen);
 				                startScreen.close();
 				    	  }
+				      }
+				    });
+					article.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  //change to create article screen
+				    	  sceneIndex = 9;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
+				}
+				
+				//main article creation menu to select what to do
+				public void createArMenu(Stage startScreen) {
+					System.out.println("Article Creation");
+					startScreen.setTitle(String.format("Article Creation: Logged in as, %s", tem.username));
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.TOP_CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label head = new Label("Header");
+			        Label titl = new Label("Title");
+			        Label des = new Label("Description");
+			        Label keys = new Label("Keywords");
+			        Label bod = new Label("Body");
+			        Label ref = new Label("References");
+			        Label oth = new Label("Other");
+			        
+			        //all the textfields
+			        TextField headt = new TextField("");
+			        TextField titlt = new TextField("");
+			        TextField dest = new TextField("");
+			        TextField keyst = new TextField("");
+			        TextField bodt = new TextField("");
+			        TextField reft = new TextField("");
+			        TextField otht = new TextField("");
+			        
+			        //logout button
+			        Button back = new Button("Back");
+			        Button sub = new Button("Submit");
+			        
+			        
+
+			        //Add all controls to Grid
+			        //left side
+			        gridPane.add(head, 0,0);
+			        gridPane.add(titl, 0,1);
+			        gridPane.add(des, 0,2);
+			        gridPane.add(keys, 0,3);
+			        gridPane.add(bod, 0,4);
+			        gridPane.add(ref, 0,5);
+			        gridPane.add(oth, 0,6);
+			        
+			        //right side
+			        gridPane.add(headt, 1,0);
+			        gridPane.add(titlt, 1,1);
+			        gridPane.add(dest, 1,2);
+			        gridPane.add(keyst, 1,3);
+			        gridPane.add(bodt, 1,4);
+			        gridPane.add(reft, 1,5);
+			        gridPane.add(otht, 1,6);
+			        
+			        gridPane.add(back, 7, 0);
+			        gridPane.add(sub, 7, 1);
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+				
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+		    		    sceneIndex = 6;
+			    		start(startScreen);
+		                startScreen.close();
+				      }
+				    });
+					
+					sub.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+		    		    
+				    	  
+				    	  
 				      }
 				    });
 					
