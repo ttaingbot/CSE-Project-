@@ -532,6 +532,9 @@ public class Login extends Application{
 			//create a new textfield for a response
 			TextField response = new TextField("Awaiting Input");
 			
+			//text area for display
+			TextArea area = new TextArea(""); 
+			
 			// create a stack pane
 	        StackPane adminWindow = new StackPane();
 	        
@@ -540,7 +543,7 @@ public class Login extends Application{
 	        adminWindow.getChildren().add(code);
 	        adminWindow.getChildren().add(role);
 	        
-	        Scene sc = new Scene(bPane, 900, 500);
+	        Scene sc = new Scene(bPane, 1000, 700);
 	        
 	        //Create Labels
 	        Label t = new Label("User Select");
@@ -565,6 +568,7 @@ public class Login extends Application{
 	        gridPane.add(del, 2, 3);
 	        gridPane.add(list, 3, 3);
 	        gridPane.add(art, 4, 4);
+	        gridPane.add(area, 1, 5);
 	        
 	        // set the scene
 	        startScreen.setScene(sc);
@@ -626,9 +630,13 @@ public class Login extends Application{
 			//list users
 			list.setOnAction((ActionEvent e) ->
 		    {
+		    	String temp = "";
 		    	for(int i = 0; i < users.size(); i++){
-		    		System.out.print(users.get(i).username + " " + users.get(i).roles.get(0) + "\n");
+		    		String tmp = "User: " + users.get(i).username + " ,Role(s): " + users.get(i).roles.get(0) + "\n";
+		    		System.out.print("User: " + users.get(i).username + " ,Role(s): " + users.get(i).roles.get(0) + "\n");
+		    		temp = temp + tmp;
 		    	}
+		    	area.setText(temp);
 		    }); 
 			//change to article window
 			art.setOnAction((ActionEvent e) ->
