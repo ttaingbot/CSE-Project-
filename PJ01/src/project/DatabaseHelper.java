@@ -40,6 +40,7 @@ class DatabaseHelper {
 				+ "id LONG AUTO_INCREMENT PRIMARY KEY, "
 				+ "header VARCHAR(255) UNIQUE, "
 				+ "title VARCHAR(255), "
+				+ "description VARCHAR(255), "
 				+ "keywords VARCHAR(255), "
 				+ "body VARCHAR(255), "
 				+ "references VARCHAR(255), "
@@ -58,16 +59,17 @@ class DatabaseHelper {
 		return true;
 	}
 
-	public void register(String header, String title, String keywords, String body, String references, String other) throws Exception {
+	public void register(String header, String title, String description, String keywords, String body, String references, String other) throws Exception {
 		
-		String insertArticle = "INSERT INTO PJArticles (header, title, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO PJArticles (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, header);
 			pstmt.setString(2, title);
-			pstmt.setString(3, keywords);
-			pstmt.setString(4, body);
-			pstmt.setString(5, references);
-			pstmt.setString(6, other);
+			pstmt.setString(3, description);
+			pstmt.setString(4, keywords);
+			pstmt.setString(5, body);
+			pstmt.setString(6, references);
+			pstmt.setString(7, other);
 			pstmt.executeUpdate();
 		}
 	}
@@ -84,6 +86,7 @@ class DatabaseHelper {
 			long id  = rs.getInt("id"); 
 			String  header = rs.getString("header");
 			String  title = rs.getString("title");  
+			String  description = rs.getString("description"); 
 			String keys = rs.getString("keywords"); 
 			String bod = rs.getString("body"); 
 			String refer = rs.getString("references"); 
@@ -94,6 +97,7 @@ class DatabaseHelper {
 			System.out.print("\n ID: " + id); 
 			System.out.print("\n Header: " + header); 
 			System.out.print("\n Title: " + title); 
+			System.out.print("\n Description: " + description); 
 			System.out.print("\n Keyword(s): " + keys); 
 			System.out.print("\n Body: " + bod); 
 			System.out.print("\n Reference(s): " + refer + "\n"); 

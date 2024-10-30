@@ -894,6 +894,8 @@ public class Login extends Application{
 			        Button up = new Button("Update Article");
 			        Button del = new Button("Delete Article(s)");
 			        
+			        TextField tex = new TextField("Insert ID");
+			        
 
 			        //Add all controls to Grid
 			        gridPane.add(Article, 0,0);
@@ -901,6 +903,7 @@ public class Login extends Application{
 			        gridPane.add(view, 2, 0);
 			        gridPane.add(up, 0, 1);
 			        gridPane.add(del, 1, 1);
+			        gridPane.add(tex, 2, 1);
 			        gridPane.add(back, 3, 0);
 			        
 			        // set the scene
@@ -937,7 +940,40 @@ public class Login extends Application{
 								e1.printStackTrace();
 							}
 							finally {
-								System.out.println("Good Bye!!");
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
+						del.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				databaseHelper.deleteArticle((Long.parseLong(tex.getText())));
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
 								databaseHelper.closeConnection();
 							}
 					      
@@ -1081,11 +1117,36 @@ public class Login extends Application{
 				      //when the submit button is pressed
 				      public void handle(ActionEvent e)
 				      {
-		    		    
-				    	  
-				    	  
-				      }
-				    });
+				    	  databaseHelper = new DatabaseHelper();
+				  		try { 
+				  			
+				  			databaseHelper.connectToDatabase();  // Connect to the database
+
+				  			// Check if the database is empty
+				  			if (databaseHelper.isDatabaseEmpty()) {
+				  				System.out.println( "In-Memory Database  is empty" );
+
+				  			}
+				  			else {
+				  				if(headt.getText().isBlank()) {
+				  					System.out.println( "Please Include a Header" );
+				  				}
+				  				else {
+				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  				}
+				  			}
+				  		}
+						 catch (Exception e1) {
+							System.err.println("Database error: " + e1.getMessage());
+							e1.printStackTrace();
+						}
+						finally {
+							//System.out.println("Good Bye!!");
+							databaseHelper.closeConnection();
+						}
+				      
+				      }	  
+				     });
 					
 				}
 	
