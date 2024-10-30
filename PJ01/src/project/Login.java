@@ -253,6 +253,12 @@ public class Login extends Application{
 			else if(sceneIndex == 5) {
 				OTPMenu(startScreen);
 			}
+			else if(sceneIndex == 6) {
+				artMenu(startScreen);
+			}
+			else if(sceneIndex == 7) {
+				instrMenu(startScreen);
+			}
 			else {
 				System.out.print("goodbye!");
 			}
@@ -443,14 +449,23 @@ public class Login extends Application{
 	    			  if(users.get(i).password.equals(pass.getText())) {
 	    				  System.out.print(users.get(i).roles.get(0));
 	    				  //check if the user is an admin and proceed to admin login
-	    				  if(users.get(i).roles.get(0) == 'a')
+	    				  if((users.get(i).roles.contains('a')))
 	    				  {
+	    					tem = users.get(i);
 	    					sceneIndex = 3;
 		    				start(startScreen);
 		    				startScreen.close();
 	    				  }
-	    				  //if not an admin go to normal login
+	    				  //check if they are an instructor
+	    				  else if(users.get(i).roles.contains('i')){
+	    					  tem=users.get(i);
+		    				  sceneIndex = 7;
+		    				  start(startScreen);
+		    				  startScreen.close();
+	    				  }
+	    				  //else go to normal login
 	    				  else {
+	    					  tem=users.get(i);
 		    				  sceneIndex = 4;
 		    				  start(startScreen);
 		    				  startScreen.close();
@@ -482,7 +497,7 @@ public class Login extends Application{
 	//Admin menu screen
 		public void adminMenu(Stage startScreen) {
 			System.out.println("Admin Menu");
-			startScreen.setTitle("Admin Menu");
+			startScreen.setTitle(String.format("Admin Menu: Logged in as, %s", tem.username));
 			
 			
 			//initialize a grid setup for the windows
@@ -526,6 +541,7 @@ public class Login extends Application{
 	        Button del = new Button("Delete");
 	        Button list = new Button("List Users");
 	        Button find = new Button("Find");
+	        Button art = new Button("Articles");
 
 	        gridPane.add(t, 1, 0);
 	        gridPane.add(response, 3, 0);
@@ -538,6 +554,7 @@ public class Login extends Application{
 	        gridPane.add(role, 4, 3);
 	        gridPane.add(del, 2, 3);
 	        gridPane.add(list, 3, 3);
+	        gridPane.add(art, 4, 4);
 	        
 	        // set the scene
 	        startScreen.setScene(sc);
@@ -596,13 +613,20 @@ public class Login extends Application{
 		    	start(startScreen);
 		        startScreen.close();      
 		    }); 
-			//close the window
+			//list users
 			list.setOnAction((ActionEvent e) ->
 		    {
 		    	for(int i = 0; i < users.size(); i++){
 		    		System.out.print(users.get(i).username + " " + users.get(i).roles.get(0) + "\n");
 		    	}
 		    }); 
+			//change to article window
+			art.setOnAction((ActionEvent e) ->
+		    {
+		    	sceneIndex = 6;
+		    	start(startScreen);
+		        startScreen.close();      
+		    });
 		}
 		
 		//OTP login screen for the very first user
@@ -694,10 +718,10 @@ public class Login extends Application{
 			
 		}
 		
-		//OTP login screen for the very first user
+		//basic user menu
 				public void userMenu(Stage startScreen) {
 					System.out.println("User Menu");
-					startScreen.setTitle("User Menu");
+					startScreen.setTitle(String.format("User Menu: Logged in as, %s", tem.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -717,7 +741,7 @@ public class Login extends Application{
 			        Scene sc = new Scene(bPane, 900, 500);
 			        
 			      //Create Labels
-			        Label User = new Label("Welcome User");
+			        Label User = new Label(String.format("Welcome User: %s", tem.username));
 			        //logout button
 			        Button back = new Button("logout");
 			        
@@ -743,6 +767,147 @@ public class Login extends Application{
 				    		sceneIndex = 2;
 				    		start(startScreen);
 			                startScreen.close();
+				      }
+				    });
+					
+				}
+				
+				//basic user menu
+				public void instrMenu(Stage startScreen) {
+					System.out.println("Instructor Menu");
+					startScreen.setTitle(String.format("Instructor Menu: Logged in as, %s", tem.username));
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label User = new Label(String.format("Welcome Instructor: %s", tem.username));
+			        //logout button
+			        Button back = new Button("logout");
+			        Button ar = new Button("Articles");
+			        
+
+			        //Add all controls to Grid
+			        gridPane.add(User, 0, 0);
+			        gridPane.add(ar, 1, 0);
+			        gridPane.add(back, 2, 0);
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+					
+					User userer = new User();
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  System.out.println("Logging you out.");
+				    		sceneIndex = 2;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
+					ar.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    		sceneIndex = 6;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
+				}
+				
+				//OTP login screen for the very first user
+				public void artMenu(Stage startScreen) {
+					System.out.println("Article Menu");
+					startScreen.setTitle(String.format("Article Menu: Logged in as, %s", tem.username));
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label Article = new Label("Article Menu");
+			        //logout button
+			        Button back = new Button("Back");
+			        Button article = new Button("Create Article");
+			        Button view = new Button("View Articles");
+			        Button up = new Button("Update Article");
+			        Button del = new Button("Delete Article(s)");
+			        
+
+			        //Add all controls to Grid
+			        gridPane.add(Article, 0,0);
+			        gridPane.add(article, 1, 0);
+			        gridPane.add(view, 2, 0);
+			        gridPane.add(up, 0, 1);
+			        gridPane.add(del, 1, 1);
+			        gridPane.add(back, 3, 0);
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+					
+					User structor = new User();
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  //check if user is an admin
+				    	  if(tem.roles.contains('a')) {
+				    		//back to admin screen
+				    		    sceneIndex = 3;
+					    		start(startScreen);
+				                startScreen.close();
+				    		  
+				    	  }
+				    	  //they are an instructor without admin roles
+				    	  else {
+				    		  //back to instructor screen
+				    		    sceneIndex = 7;
+					    		start(startScreen);
+				                startScreen.close();
+				    	  }
 				      }
 				    });
 					
