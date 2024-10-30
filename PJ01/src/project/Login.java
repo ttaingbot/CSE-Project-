@@ -894,11 +894,12 @@ public class Login extends Application{
 			        //logout button
 			        Button back = new Button("Back");
 			        Button article = new Button("Create Article");
-			        Button view = new Button("View Articles");
+			        Button view = new Button("View All Articles");
 			        Button up = new Button("Update Article");
 			        Button del = new Button("Delete Article(s)");
+			        Button ser = new Button("Search by Keyword");
 			        
-			        TextField tex = new TextField("Insert ID");
+			        TextField tex = new TextField("Type Here");
 			        
 
 			        //Add all controls to Grid
@@ -909,6 +910,7 @@ public class Login extends Application{
 			        gridPane.add(del, 1, 1);
 			        gridPane.add(tex, 2, 1);
 			        gridPane.add(back, 3, 0);
+			        gridPane.add(ser, 3, 1);
 			        
 			        // set the scene
 			        startScreen.setScene(sc);
@@ -1028,7 +1030,38 @@ public class Login extends Application{
 					     });
 						
 							
-							
+						ser.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				databaseHelper.displayByKeyword(tex.getText());
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });	
 						
 					      
 					

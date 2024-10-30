@@ -106,6 +106,43 @@ class DatabaseHelper {
 		} 
 	}
 	
+	public void displayByKeyword(String keyword) throws SQLException {
+	    String sql = "SELECT * FROM Project WHERE keywords LIKE ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+	        pstmt.setString(1, "%" + keyword + "%"); // Use LIKE to search for the keyword in the keywords column
+	        ResultSet rs = pstmt.executeQuery();
+
+	        boolean hasResults = false; // Flag to check if any articles are found
+	        while (rs.next()) { 
+	            hasResults = true; // Set the flag to true if we have results
+
+	            // Retrieve by column name 
+	            long id = rs.getLong("id"); 
+	            String header = rs.getString("header");
+	            String title = rs.getString("title");  
+	            String description = rs.getString("description"); 
+	            String keys = rs.getString("keywords"); 
+	            String bod = rs.getString("body"); 
+	            String refer = rs.getString("references"); 
+	            String other = rs.getString("other");
+
+	            // Display values 
+	            System.out.print("\n ID: " + id); 
+	            System.out.print("\n Header: " + header); 
+	            System.out.print("\n Title: " + title); 
+	            System.out.print("\n Description: " + description); 
+	            System.out.print("\n Keyword(s): " + keys); 
+	            System.out.print("\n Body: " + bod); 
+	            System.out.print("\n Reference(s): " + refer); 
+	            System.out.print("\n Other(s): " + other + "\n");
+	        }
+
+	        if (!hasResults) {
+	            System.out.println("No articles found with: '" + keyword + "' in keywords.");
+	        }
+	    }
+	}
+	
 	//delete selected article
 	public void deleteArticle(long id) throws SQLException {
 	    String deleteSQL = "DELETE FROM Project WHERE id = ?";
