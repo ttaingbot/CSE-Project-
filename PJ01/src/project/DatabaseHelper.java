@@ -76,10 +76,12 @@ class DatabaseHelper {
 
 
 	
-	public void displayArticles() throws Exception{
+	public String displayArticles() throws Exception{
 		String sql = "SELECT * FROM Project"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
+		String ret = "";
+		String temp;
 
 		while(rs.next()) { 
 			// Retrieve by column name 
@@ -103,14 +105,28 @@ class DatabaseHelper {
 			System.out.print("\n Reference(s): " + refer); 
 			System.out.print("\n Other(s): " + other + "\n");
 			
+			temp = "ID: " + id + "\n" +
+					"Header: " + header + "\n" +
+					"Title: " + title + "\n" +
+					"Description: " + description + "\n" +
+					"Keyword(s): " + keys + "\n" + 
+					"Body: " + bod + "\n" + 
+					"Reference(s): " + refer + "\n" +
+					"Other: " + other + "\n";
+					
+					ret = ret + temp;
+			
 		} 
+		return ret;
 	}
 	
-	public void displayByKeyword(String keyword) throws SQLException {
+	public String displayByKeyword(String keyword) throws SQLException {
 	    String sql = "SELECT * FROM Project WHERE keywords LIKE ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 	        pstmt.setString(1, "%" + keyword + "%"); // Use LIKE to search for the keyword in the keywords column
 	        ResultSet rs = pstmt.executeQuery();
+	        String ret = "";
+			String temp;
 
 	        boolean hasResults = false; // Flag to check if any articles are found
 	        while (rs.next()) { 
@@ -135,12 +151,25 @@ class DatabaseHelper {
 	            System.out.print("\n Body: " + bod); 
 	            System.out.print("\n Reference(s): " + refer); 
 	            System.out.print("\n Other(s): " + other + "\n");
+	            
+	            temp = "ID: " + id + "\n" +
+						"Header: " + header + "\n" +
+						"Title: " + title + "\n" +
+						"Description: " + description + "\n" +
+						"Keyword(s): " + keys + "\n" + 
+						"Body: " + bod + "\n" + 
+						"Reference(s): " + refer + "\n" +
+						"Other: " + other + "\n";
+						
+						ret = ret + temp;
 	        }
 
 	        if (!hasResults) {
 	            System.out.println("No articles found with: '" + keyword + "' in keywords.");
 	        }
+	        return ret;
 	    }
+	    
 	}
 	
 	//delete selected article

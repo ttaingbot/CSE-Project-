@@ -900,6 +900,8 @@ public class Login extends Application{
 			        Button ser = new Button("Search by Keyword");
 			        
 			        TextField tex = new TextField("Type Here");
+			        TextArea texArea = new TextArea("");
+			        texArea.setWrapText(true);
 			        
 
 			        //Add all controls to Grid
@@ -911,6 +913,7 @@ public class Login extends Application{
 			        gridPane.add(tex, 2, 1);
 			        gridPane.add(back, 3, 0);
 			        gridPane.add(ser, 3, 1);
+			        gridPane.add(texArea, 2, 2);
 			        
 			        // set the scene
 			        startScreen.setScene(sc);
@@ -938,7 +941,7 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				databaseHelper.displayArticles();
+					  				texArea.setText(databaseHelper.displayArticles());
 					  			}
 					  		}
 							 catch (Exception e1) {
@@ -1048,7 +1051,7 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				databaseHelper.displayByKeyword(tex.getText());
+					  				texArea.setText(databaseHelper.displayByKeyword(tex.getText()));
 					  			}
 					  		}
 							 catch (Exception e1) {
@@ -1212,6 +1215,10 @@ public class Login extends Application{
 				  				}
 				  				else {
 				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					System.out.println( "Article Added!" );
+				  					sceneIndex = 6;
+						    		start(startScreen);
+					                startScreen.close();
 				  				}
 
 				  			}
@@ -1222,6 +1229,10 @@ public class Login extends Application{
 				  				}
 				  				else {
 				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					System.out.println( "Article Added!" );
+				  					sceneIndex = 6;
+						    		start(startScreen);
+					                startScreen.close();
 				  				}
 				  			}
 				  		}
