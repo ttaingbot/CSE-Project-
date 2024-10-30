@@ -36,7 +36,7 @@ class DatabaseHelper {
 	}
 
 	private void createTables() throws SQLException {
-		String userTable = "CREATE TABLE IF NOT EXISTS data ("
+		String userTable = "CREATE TABLE IF NOT EXISTS Project ("
 				+ "id LONG AUTO_INCREMENT PRIMARY KEY, "
 				+ "header VARCHAR(255) UNIQUE, "
 				+ "title VARCHAR(255), "
@@ -51,7 +51,7 @@ class DatabaseHelper {
 
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {
-		String query = "SELECT COUNT(*) AS count FROM data";
+		String query = "SELECT COUNT(*) AS count FROM Project";
 		ResultSet resultSet = statement.executeQuery(query);
 		if (resultSet.next()) {
 			return resultSet.getInt("count") == 0;
@@ -61,7 +61,7 @@ class DatabaseHelper {
 
 	public void register(String header, String title, String description, String keywords, String body, String references, String other) throws Exception {
 		
-		String insertArticle = "INSERT INTO data (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO Project (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, header);
 			pstmt.setString(2, title);
@@ -77,7 +77,7 @@ class DatabaseHelper {
 
 	
 	public void displayArticles() throws Exception{
-		String sql = "SELECT * FROM data"; 
+		String sql = "SELECT * FROM Project"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
 
@@ -100,7 +100,7 @@ class DatabaseHelper {
 			System.out.print("\n Description: " + description); 
 			System.out.print("\n Keyword(s): " + keys); 
 			System.out.print("\n Body: " + bod); 
-			System.out.print("\n Reference(s): " + refer + "\n"); 
+			System.out.print("\n Reference(s): " + refer); 
 			System.out.print("\n Other(s): " + other + "\n");
 			
 		} 
@@ -108,7 +108,7 @@ class DatabaseHelper {
 	
 	//delete selected article
 	public void deleteArticle(long id) throws SQLException {
-	    String deleteSQL = "DELETE FROM PJArticles WHERE id = ?";
+	    String deleteSQL = "DELETE FROM Project WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)) {
 	    	System.out.println("Article with ID " + id);
 	        pstmt.setLong(1, id); // Set the id parameter in the SQL query
@@ -122,7 +122,7 @@ class DatabaseHelper {
 	}
 	
 	public void updateArticle(long id, String header, String title, String description, String keywords, String body, String references, String other) throws SQLException {
-	    String updateSQL = "UPDATE PJArticles SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, other = ? WHERE id = ?";
+	    String updateSQL = "UPDATE Project SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, other = ? WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
 	        pstmt.setString(1, header);
 	        pstmt.setString(2, title);
@@ -143,7 +143,7 @@ class DatabaseHelper {
 	}
 	
 	public boolean articleExists(long id) throws SQLException {
-	    String query = "SELECT COUNT(*) AS count FROM PJArticles WHERE id = ?";
+	    String query = "SELECT COUNT(*) AS count FROM Project WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setLong(1, id);
 	        ResultSet resultSet = pstmt.executeQuery();

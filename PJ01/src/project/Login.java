@@ -969,8 +969,7 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				databaseHelper.deleteArticle((Long.parseLong(tex.getText())));
-					  				System.out.println("Index: "+Long.parseLong(tex.getText()));
+					  				databaseHelper.deleteArticle((Long.parseLong(tex.getText().trim())));
 					  			}
 					  		}
 							 catch (Exception e1) {
@@ -1003,7 +1002,8 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				if(databaseHelper.articleExists(Long.parseLong(tex.getText()))) {
+					  				if(databaseHelper.articleExists(Long.parseLong(tex.getText().trim()))) {
+					  					tempid = Long.parseLong(tex.getText().trim());
 							    		//change to update screen
 							    		    sceneIndex = 10;
 								    		start(startScreen);
@@ -1313,7 +1313,7 @@ public class Login extends Application{
 				  					System.out.println( "Please Include a Header" );
 				  				}
 				  				else {
-				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					databaseHelper.updateArticle(tempid, headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
 				  				}
 				  			}
 				  		}
