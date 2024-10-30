@@ -36,7 +36,7 @@ class DatabaseHelper {
 	}
 
 	private void createTables() throws SQLException {
-		String userTable = "CREATE TABLE IF NOT EXISTS PJArticles ("
+		String userTable = "CREATE TABLE IF NOT EXISTS data ("
 				+ "id LONG AUTO_INCREMENT PRIMARY KEY, "
 				+ "header VARCHAR(255) UNIQUE, "
 				+ "title VARCHAR(255), "
@@ -51,7 +51,7 @@ class DatabaseHelper {
 
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {
-		String query = "SELECT COUNT(*) AS count FROM PJArticles";
+		String query = "SELECT COUNT(*) AS count FROM data";
 		ResultSet resultSet = statement.executeQuery(query);
 		if (resultSet.next()) {
 			return resultSet.getInt("count") == 0;
@@ -61,7 +61,7 @@ class DatabaseHelper {
 
 	public void register(String header, String title, String description, String keywords, String body, String references, String other) throws Exception {
 		
-		String insertArticle = "INSERT INTO PJArticles (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO data (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, header);
 			pstmt.setString(2, title);
@@ -77,13 +77,13 @@ class DatabaseHelper {
 
 	
 	public void displayArticles() throws Exception{
-		String sql = "SELECT * FROM PJArticles"; 
+		String sql = "SELECT * FROM data"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
 
 		while(rs.next()) { 
 			// Retrieve by column name 
-			long id  = rs.getInt("id"); 
+			long id  = rs.getLong("id"); 
 			String  header = rs.getString("header");
 			String  title = rs.getString("title");  
 			String  description = rs.getString("description"); 
@@ -110,6 +110,7 @@ class DatabaseHelper {
 	public void deleteArticle(long id) throws SQLException {
 	    String deleteSQL = "DELETE FROM PJArticles WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)) {
+	    	System.out.println("Article with ID " + id);
 	        pstmt.setLong(1, id); // Set the id parameter in the SQL query
 	        int rowsAffected = pstmt.executeUpdate();
 	        if (rowsAffected > 0) {
@@ -118,6 +119,39 @@ class DatabaseHelper {
 	            System.out.println("No article found with ID " + id + ".");
 	        }
 	    }
+	}
+	
+	public void updateArticle(long id, String header, String title, String description, String keywords, String body, String references, String other) throws SQLException {
+	    String updateSQL = "UPDATE PJArticles SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, other = ? WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
+	        pstmt.setString(1, header);
+	        pstmt.setString(2, title);
+	        pstmt.setString(3, description);
+	        pstmt.setString(4, keywords);
+	        pstmt.setString(5, body);
+	        pstmt.setString(6, references);
+	        pstmt.setString(7, other);
+	        pstmt.setLong(8, id); // Set the id parameter in the SQL query
+	        
+	        int rowsAffected = pstmt.executeUpdate();
+	        if (rowsAffected > 0) {
+	            System.out.println("Article with ID " + id + " has been updated.");
+	        } else {
+	            System.out.println("No article found with ID " + id + ".");
+	        }
+	    }
+	}
+	
+	public boolean articleExists(long id) throws SQLException {
+	    String query = "SELECT COUNT(*) AS count FROM PJArticles WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setLong(1, id);
+	        ResultSet resultSet = pstmt.executeQuery();
+	        if (resultSet.next()) {
+	            return resultSet.getInt("count") > 0; // Return true if count > 0
+	        }
+	    }
+	    return false; // Return false if no rows found
 	}
 
 

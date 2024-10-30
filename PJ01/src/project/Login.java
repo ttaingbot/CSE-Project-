@@ -24,6 +24,7 @@ public class Login extends Application{
 	//initiallize global variables
 	User tem = new User();
 	int sceneIndex = 0;
+	long tempid;
 	double OTP;
 	char OTPR;
 	boolean kill = false;
@@ -264,6 +265,9 @@ public class Login extends Application{
 			}
 			else if(sceneIndex == 9) {
 				createArMenu(startScreen);
+			}
+			else if(sceneIndex == 10) {
+				updArMenu(startScreen);
 			}
 			else {
 				System.out.print("goodbye!");
@@ -966,6 +970,7 @@ public class Login extends Application{
 					  			}
 					  			else {
 					  				databaseHelper.deleteArticle((Long.parseLong(tex.getText())));
+					  				System.out.println("Index: "+Long.parseLong(tex.getText()));
 					  			}
 					  		}
 							 catch (Exception e1) {
@@ -979,6 +984,49 @@ public class Login extends Application{
 					      
 					      }	  
 					     });
+						
+						up.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				if(databaseHelper.articleExists(Long.parseLong(tex.getText()))) {
+							    		//change to update screen
+							    		    sceneIndex = 10;
+								    		start(startScreen);
+							                startScreen.close();
+							                databaseHelper.closeConnection();
+							    	  }
+					  				else {
+					  					System.out.println("Please input a valid ID");
+					  				}
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
 							
 							
 						
@@ -1025,10 +1073,143 @@ public class Login extends Application{
 					
 				}
 				
-				//main article creation menu to select what to do
+				// article creation menu 
 				public void createArMenu(Stage startScreen) {
 					System.out.println("Article Creation");
 					startScreen.setTitle(String.format("Article Creation: Logged in as, %s", tem.username));
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.TOP_CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label head = new Label("Header");
+			        Label titl = new Label("Title");
+			        Label des = new Label("Description");
+			        Label keys = new Label("Keywords");
+			        Label bod = new Label("Body");
+			        Label ref = new Label("References");
+			        Label oth = new Label("Other");
+			        
+			        //all the textfields
+			        TextField headt = new TextField("");
+			        TextField titlt = new TextField("");
+			        TextField dest = new TextField("");
+			        TextField keyst = new TextField("");
+			        TextField bodt = new TextField("");
+			        TextField reft = new TextField("");
+			        TextField otht = new TextField("");
+			        
+			        //logout button
+			        Button back = new Button("Back");
+			        Button sub = new Button("Submit");
+			        
+			        
+
+			        //Add all controls to Grid
+			        //left side
+			        gridPane.add(head, 0,0);
+			        gridPane.add(titl, 0,1);
+			        gridPane.add(des, 0,2);
+			        gridPane.add(keys, 0,3);
+			        gridPane.add(bod, 0,4);
+			        gridPane.add(ref, 0,5);
+			        gridPane.add(oth, 0,6);
+			        
+			        //right side
+			        gridPane.add(headt, 1,0);
+			        gridPane.add(titlt, 1,1);
+			        gridPane.add(dest, 1,2);
+			        gridPane.add(keyst, 1,3);
+			        gridPane.add(bodt, 1,4);
+			        gridPane.add(reft, 1,5);
+			        gridPane.add(otht, 1,6);
+			        
+			        gridPane.add(back, 7, 0);
+			        gridPane.add(sub, 7, 1);
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+				
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+		    		    sceneIndex = 6;
+			    		start(startScreen);
+		                startScreen.close();
+				      }
+				    });
+					
+					sub.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  databaseHelper = new DatabaseHelper();
+				  		try { 
+				  			
+				  			databaseHelper.connectToDatabase();  // Connect to the database
+
+				  			// Check if the database is empty
+				  			if (databaseHelper.isDatabaseEmpty()) {
+				  				System.out.println( "In-Memory Database  is empty, Adding article" );
+				  				//create article and add to new database
+				  				if(headt.getText().isBlank()) {
+				  					System.out.println( "Please Include a Header" );
+				  				}
+				  				else {
+				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  				}
+
+				  			}
+				  			//add to existing database
+				  			else {
+				  				if(headt.getText().isBlank()) {
+				  					System.out.println( "Please Include a Header" );
+				  				}
+				  				else {
+				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  				}
+				  			}
+				  		}
+						 catch (Exception e1) {
+							System.err.println("Database error: " + e1.getMessage());
+							e1.printStackTrace();
+						}
+						finally {
+							//System.out.println("Good Bye!!");
+							databaseHelper.closeConnection();
+						}
+				      
+				      }	  
+				     });
+					
+				}
+				
+				// article update menu 
+				public void updArMenu(Stage startScreen) {
+					System.out.println("Article Update");
+					startScreen.setTitle(String.format("Article Update: Logged in as, %s", tem.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
