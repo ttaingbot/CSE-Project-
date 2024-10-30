@@ -36,13 +36,13 @@ class DatabaseHelper {
 	}
 
 	private void createTables() throws SQLException {
-		String userTable = "CREATE TABLE IF NOT EXISTS Articles ("
+		String userTable = "CREATE TABLE IF NOT EXISTS PJArticles ("
 				+ "id LONG AUTO_INCREMENT PRIMARY KEY, "
 				+ "header VARCHAR(255) UNIQUE, "
 				+ "title VARCHAR(255), "
 				+ "keywords VARCHAR(255), "
 				+ "body VARCHAR(255), "
-				+ "references VARCHAR(255)), "
+				+ "references VARCHAR(255), "
 				+ "other VARCHAR(255))";
 		statement.execute(userTable);
 	}
@@ -50,7 +50,7 @@ class DatabaseHelper {
 
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {
-		String query = "SELECT COUNT(*) AS count FROM Articles";
+		String query = "SELECT COUNT(*) AS count FROM PJArticles";
 		ResultSet resultSet = statement.executeQuery(query);
 		if (resultSet.next()) {
 			return resultSet.getInt("count") == 0;
@@ -60,7 +60,7 @@ class DatabaseHelper {
 
 	public void register(String header, String title, String keywords, String body, String references, String other) throws Exception {
 		
-		String insertArticle = "INSERT INTO articles (header, title, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO PJArticles (header, title, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, header);
 			pstmt.setString(2, title);
@@ -75,7 +75,7 @@ class DatabaseHelper {
 
 	
 	public void displayArticles() throws Exception{
-		String sql = "SELECT * FROM Articles"; 
+		String sql = "SELECT * FROM PJArticles"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
 
@@ -104,7 +104,7 @@ class DatabaseHelper {
 	
 	//delete selected article
 	public void deleteArticle(long id) throws SQLException {
-	    String deleteSQL = "DELETE FROM Articles WHERE id = ?";
+	    String deleteSQL = "DELETE FROM PJArticles WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)) {
 	        pstmt.setLong(1, id); // Set the id parameter in the SQL query
 	        int rowsAffected = pstmt.executeUpdate();

@@ -28,8 +28,8 @@ public class Login extends Application{
 	char OTPR;
 	boolean kill = false;
 	private static ArrayList<User> users;
-
 	
+	private static DatabaseHelper databaseHelper;
 	
 	public static void setPassword(Scanner scanner, User user) {
 		// variables to hold two passwords for comparison - if they are equal then change the password
@@ -910,6 +910,44 @@ public class Login extends Application{
 					
 					User structor = new User();
 					
+						
+						view.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				databaseHelper.displayArticles();
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+							
+							
+						
+					      
+					
 					back.setOnAction(new EventHandler<ActionEvent>()
 				    {
 				      @Override      
@@ -933,6 +971,7 @@ public class Login extends Application{
 				    	  }
 				      }
 				    });
+					
 					article.setOnAction(new EventHandler<ActionEvent>()
 				    {
 				      @Override      
@@ -945,6 +984,8 @@ public class Login extends Application{
 			                startScreen.close();
 				      }
 				    });
+					
+					
 					
 				}
 				
@@ -1050,7 +1091,7 @@ public class Login extends Application{
 	
 	public static void main(String[] args) {
 		launch(args);
-
+	
 	}
 	
 }
