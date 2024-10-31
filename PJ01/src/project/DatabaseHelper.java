@@ -1,4 +1,9 @@
 package project;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 
 import java.sql.Connection;
@@ -187,6 +192,7 @@ class DatabaseHelper {
 	    }
 	}
 	
+	//function to select the article based on ID and then update that particular article's contents
 	public void updateArticle(long id, String header, String title, String description, String keywords, String body, String references, String other) throws SQLException {
 	    String updateSQL = "UPDATE Project SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, other = ? WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
@@ -208,6 +214,7 @@ class DatabaseHelper {
 	    }
 	}
 	
+	//function to check if the desired article exists within the database
 	public boolean articleExists(long id) throws SQLException {
 	    String query = "SELECT COUNT(*) AS count FROM Project WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -233,5 +240,63 @@ class DatabaseHelper {
 			se.printStackTrace(); 
 		} 
 	}
+	
+	// Method to back up articles to a file
+	public void backupToFile(String fileName) throws IOException, SQLException {
+	    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+	        String query = "SELECT * FROM Project";
+	        ResultSet rs = statement.executeQuery(query);
+	        while (rs.next()) {
+	            writer.write(rs.getLong("id") + "," +
+	                         rs.getString("header") + "," +
+	                         rs.getString("title") + "," +
+	                         rs.getString("description") + "," +
+	                         rs.getString("keywords") + "," +
+	                         rs.getString("body") + "," +
+	                         rs.getString("references") + "," +
+	                         rs.getString("other") + "\n");
+	        }
+	        System.out.println("Data backed up to " + fileName);
+	    }
+	}
+
+	// Method to restore articles from a file
+	public void restoreFromFile(String fileName, boolean merge) throws IOException, SQLException {
+	    if (!merge) {
+	        statement.executeUpdate("DELETE FROM Project"); // Clear existing data if not merging
+	    }
+
+	    try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+	        String line;
+	        while ((line = reader.readLine()) != null) {
+	            String[] fields = line.split(",");
+	            long id = Long.parseLong(fields[0]);
+	            String header = fields[1];
+	            String title = fields[2];
+	            String description = fields[3];
+	            String keywords = fields[4];
+	            String body = fields[5];
+	            String references = fields[6];
+	            String other = fields[7];
+
+	            if (!merge || !articleExists(id)) {
+	                String insertSQL = "INSERT INTO Project (id, header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	                try (PreparedStatement pstmt = connection.prepareStatement(insertSQL)) {
+	                    pstmt.setLong(1, id);
+	                    pstmt.setString(2, header);
+	                    pstmt.setString(3, title);
+	                    pstmt.setString(4, description);
+	                    pstmt.setString(5, keywords);
+	                    pstmt.setString(6, body);
+	                    pstmt.setString(7, references);
+	                    pstmt.setString(8, other);
+	                    pstmt.executeUpdate();
+	                }
+	            }
+	        }
+	        System.out.println("Data restored from " + fileName);
+	    }
+	}
+
 
 }

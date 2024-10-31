@@ -32,6 +32,36 @@ public class Login extends Application{
 	
 	private static DatabaseHelper databaseHelper;
 	
+	//Method to backup the database to a file
+	public static void backupData() {
+	    try {
+	        databaseHelper = new DatabaseHelper();
+	        databaseHelper.connectToDatabase();
+	        System.out.println("Initiating data backup...");
+	        databaseHelper.backupToFile("backupData.txt");
+	        System.out.println("Data backup completed successfully.");
+	    } catch (Exception e) {
+	        System.err.println("Error during backup: " + e.getMessage());
+	    } finally {
+	        databaseHelper.closeConnection();
+	    }
+	}
+
+	//Method to restore the database from a file
+	public static void restoreData() {
+	    try {
+	        databaseHelper = new DatabaseHelper();
+	        databaseHelper.connectToDatabase();
+	        System.out.println("Initiating data restore...");
+	        databaseHelper.restoreFromFile("backupData.txt", true); // true = merge, false = replace
+	        System.out.println("Data restore completed successfully.");
+	    } catch (Exception e) {
+	        System.err.println("Error during restore: " + e.getMessage());
+	    } finally {
+	        databaseHelper.closeConnection();
+	    }
+	}
+	
 	public static void setPassword(Scanner scanner, User user) {
 		// variables to hold two passwords for comparison - if they are equal then change the password
 		String s1;
@@ -555,6 +585,10 @@ public class Login extends Application{
 	        Button list = new Button("List Users");
 	        Button find = new Button("Find");
 	        Button art = new Button("Articles");
+	        
+	     // Add new Backup and Restore buttons for Phase 2 requirements
+		    Button backupBtn = new Button("Backup Data");
+		    Button restoreBtn = new Button("Restore Data");
 
 	        gridPane.add(t, 1, 0);
 	        gridPane.add(response, 3, 0);
@@ -569,11 +603,17 @@ public class Login extends Application{
 	        gridPane.add(list, 3, 3);
 	        gridPane.add(art, 4, 4);
 	        gridPane.add(area, 1, 5);
+	        gridPane.add(backupBtn, 0, 5);  // Add Backup button
+		    gridPane.add(restoreBtn, 0, 6);  // Add Restore button
 	        
 	        // set the scene
 	        startScreen.setScene(sc);
 	 
 	        startScreen.show();
+	        
+	     // Define actions for Backup and Restore buttons
+		    backupBtn.setOnAction((ActionEvent e) -> backupData());
+		    restoreBtn.setOnAction((ActionEvent e) -> restoreData());
 			
 			
 			gen.setOnAction(new EventHandler<ActionEvent>()
