@@ -586,9 +586,7 @@ public class Login extends Application{
 	        Button find = new Button("Find");
 	        Button art = new Button("Articles");
 	        
-	     // Add new Backup and Restore buttons for Phase 2 requirements
-		    Button backupBtn = new Button("Backup Data");
-		    Button restoreBtn = new Button("Restore Data");
+	     
 
 	        gridPane.add(t, 1, 0);
 	        gridPane.add(response, 3, 0);
@@ -603,17 +601,14 @@ public class Login extends Application{
 	        gridPane.add(list, 3, 3);
 	        gridPane.add(art, 4, 4);
 	        gridPane.add(area, 1, 5);
-	        gridPane.add(backupBtn, 0, 5);  // Add Backup button
-		    gridPane.add(restoreBtn, 0, 6);  // Add Restore button
+	        
 	        
 	        // set the scene
 	        startScreen.setScene(sc);
 	 
 	        startScreen.show();
 	        
-	     // Define actions for Backup and Restore buttons
-		    backupBtn.setOnAction((ActionEvent e) -> backupData());
-		    restoreBtn.setOnAction((ActionEvent e) -> restoreData());
+	     
 			
 			
 			gen.setOnAction(new EventHandler<ActionEvent>()
@@ -951,6 +946,11 @@ public class Login extends Application{
 			        TextArea texArea = new TextArea("");
 			        texArea.setWrapText(true);
 			        
+			     // Add new Backup and Restore buttons for Phase 2 requirements
+				    Button backupBtn = new Button("Backup Data");
+				    Button restoreBtn = new Button("Restore Data");
+
+			        
 
 			        //Add all controls to Grid
 			        gridPane.add(Article, 0,0);
@@ -962,6 +962,9 @@ public class Login extends Application{
 			        gridPane.add(back, 3, 0);
 			        gridPane.add(ser, 3, 1);
 			        gridPane.add(texArea, 2, 2);
+			        gridPane.add(backupBtn, 3, 2);  // Add Backup button
+				    gridPane.add(restoreBtn, 3, 3);  // Add Restore button
+
 			        
 			        // set the scene
 			        startScreen.setScene(sc);
@@ -970,7 +973,10 @@ public class Login extends Application{
 					
 					User structor = new User();
 					
-						
+				    // Define actions for Backup and Restore buttons
+				    backupBtn.setOnAction((ActionEvent e) -> backupData());
+				    restoreBtn.setOnAction((ActionEvent e) -> restoreData());
+
 						view.setOnAction(new EventHandler<ActionEvent>()
 					    {
 					      @Override      
