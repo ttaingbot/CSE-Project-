@@ -26,7 +26,7 @@ public class Login extends Application{
 	int sceneIndex = 0;
 	long tempid;
 	double OTP;
-	char OTPR;
+	char otpR;
 	boolean kill = false;
 	private static ArrayList<User> users;
 	
@@ -47,7 +47,14 @@ public class Login extends Application{
 		// if the strings are not equal, call the function again
 		if(!s1.equals(s2)) {
 			System.out.println("Error, passwords do not match: ");
-			setPassword(scanner, user);
+			while (!s1.equals(s2)) {
+				System.out.println("Error, passwords do not match. Please try again.");
+				System.out.println("Enter password: ");
+				s1 = scanner.nextLine();
+				System.out.println("Please enter your password again: ");
+				s2 = scanner.nextLine();
+			}
+			user.password = s1;
 		}
 		// otherwise, set the password to either string
 		else {
@@ -107,10 +114,10 @@ public class Login extends Application{
 		
 	}
 	
-	// the goal of this function is to check that the inputted line is a single char of a type allowed
-	// returns a boolean if the char follows all of required conditions
-	public static boolean checkChar(Scanner scanner, String allowed, String input) {
-		
+		while (!input.matches("[A-Za-z]")) {
+			System.out.println("Error, input is not a single char");
+			input = scanner.nextLine();
+		}
 		
 		// first check if the input is more than one char
 		// if it is not, pass the checkChar function again and then return to avoid recursive loops
@@ -365,7 +372,7 @@ public class Login extends Application{
 	      public void handle(ActionEvent e)
 	      {
 	    	  //check if passwords match and username isnt empty
-	        if(adminPass.getText().equals(adminPassConf.getText()) && User != null) {
+			if(adminPass.getText().equals(adminPassConf.getText()) && adminUser.getText() != null && !adminUser.getText().isEmpty()) {
 	        	//set username to text
 	    		firstAdmin.username = adminUser.getText();
 	    		//set password to text
@@ -587,7 +594,7 @@ public class Login extends Application{
 		    		  //System.out.print("otpppppp");
 		    	  OTP = Math.random()*1000000;
 		    	  code.setText(String.valueOf(OTP));
-		    	  OTPR = role.getText().charAt(0);
+				  otpR = role.getText().charAt(0);
 		    	  }
 		      }
 		    });
@@ -712,13 +719,13 @@ public class Login extends Application{
 		      public void handle(ActionEvent e)
 		      {
 		    	  //check if passwords match and username isnt empty
-		        if(uPass.getText().equals(uPassConf.getText()) && User != null) {
+				if(uPass.getText().equals(uPassConf.getText()) && uUser.getText() != null && !uUser.getText().isEmpty()) {
 		        	//set username to text
 		        	userer.username = uUser.getText();
 		    		//set password to text
 		        	userer.password = uPass.getText();
 		    		// adding the otp role to newly created user
-		        	userer.roles.add(OTPR);
+					userer.roles.add(otpR);
 		    		// adding first user to list of usernames in system
 		    		users.add(userer);
 		    		// displaying log out message and sending program to loginScreen
