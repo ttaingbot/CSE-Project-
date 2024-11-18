@@ -41,7 +41,7 @@ class DatabaseHelper {
 	}
 
 	private void createTables() throws SQLException {
-		String userTable = "CREATE TABLE IF NOT EXISTS Project ("
+		String userTable = "CREATE TABLE IF NOT EXISTS project ("
 				+ "id LONG AUTO_INCREMENT PRIMARY KEY, "
 				+ "header VARCHAR(255) UNIQUE, "
 				+ "title VARCHAR(255), "
@@ -50,7 +50,9 @@ class DatabaseHelper {
 				+ "body VARCHAR(255), "
 				+ "references VARCHAR(255), "
 				+ "other VARCHAR(255))";
-		statement.execute(userTable);
+		try (PreparedStatement pstmt = connection.prepareStatement(userTable)) {
+			pstmt.execute();
+		}
 	}
 
 
