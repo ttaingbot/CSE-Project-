@@ -14,6 +14,7 @@ public class User {
 	String lastName;
 	String preferredName;
 	String topic;
+	int id; //id to be used to update users
 	
 	// going to arrange roles by char - a=admin, s=student, i=instructor
 	ArrayList<Character> roles = new ArrayList<Character>();

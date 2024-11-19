@@ -1,7 +1,7 @@
 package project;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javafx.event.ActionEvent;
@@ -594,6 +594,8 @@ public class Login extends Application{
 	        Button list = new Button("List Users");
 	        Button find = new Button("Find");
 	        Button art = new Button("Articles");
+	        Button upd = new Button("Update Role");
+	        Button rem = new Button("Remove Role");
 	        
 	     
 
@@ -610,6 +612,8 @@ public class Login extends Application{
 	        gridPane.add(list, 3, 3);
 	        gridPane.add(art, 4, 4);
 	        gridPane.add(area, 1, 5);
+	        gridPane.add(upd, 2, 4);
+	        gridPane.add(rem, 3, 4);
 	        
 	        
 	        // set the scene
@@ -644,6 +648,7 @@ public class Login extends Application{
 		    		  if(users.get(i).username.equals(user.getText())){
 		    			  kill = true;
 		    			  tem = users.get(i);
+		    			  tem.id = i;
 		    			  response.setText("User Found! Type Yes here to confirm");
 		    		  }
 		    		  if(kill == false) {
@@ -664,6 +669,37 @@ public class Login extends Application{
 		    	}
 		    });
 			
+			//update selected user's roles
+			upd.setOnAction((ActionEvent e) ->
+		    {
+		    	boolean check = false;
+		    	if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
+		    		for (int i = 0; i < tem.roles.size(); i++) {
+		    		      if(role.getText().equals(tem.roles.get(i))) {
+		    		    	  response.setText("User already has role");
+		    		    	  check = true;
+		    		      }
+		    		    }
+		    		if(check == false) {
+		    			users.get(tem.id).roles.add(role.getText().charAt(0));
+		    			response.setText("Roles updated!");
+		    		}
+		    	}
+		    });
+			
+			//remove selected user's roles
+			rem.setOnAction((ActionEvent e) ->
+		    {
+		    	if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
+		    		for (int i = 0; i < tem.roles.size(); i++) {
+		    		      if(tem.roles.get(i).equals(role.getText().charAt(0))) {
+		    		    	  users.get(tem.id).roles.remove(i);
+		    		    	  response.setText("Role Removed!");
+		    		      }
+		    		    }
+		    	}
+		    });
+			
 			//close the window
 			close.setOnAction((ActionEvent e) ->
 		    {
@@ -676,9 +712,18 @@ public class Login extends Application{
 		    {
 		    	String temp = "";
 		    	for(int i = 0; i < users.size(); i++){
-		    		String tmp = "User: " + users.get(i).username + " ,Role(s): " + users.get(i).roles.get(0) + "\n";
-		    		System.out.print("User: " + users.get(i).username + " ,Role(s): " + users.get(i).roles.get(0) + "\n");
+		    		String tmp = "User: " + users.get(i).username + " ,Role(s): ";
+		    		if(users.get(i).roles.size() > 1) {
+			    		for(int j = 0; j < users.get(i).roles.size()-1; j++) {
+			    			tmp  = tmp + users.get(i).roles.get(j) + ", ";
+			    		}
+			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1) + "\n";
+		    		}
+		    		else {
+		    			tmp  = tmp + users.get(i).roles.get(0) + "\n";
+		    		}
 		    		temp = temp + tmp;
+		    		System.out.print(temp);
 		    	}
 		    	area.setText(temp);
 		    }); 
