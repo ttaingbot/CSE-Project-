@@ -300,7 +300,7 @@ public class Login extends Application{
 				instrMenu(startScreen);
 			}
 			else if(sceneIndex == 8) {
-				//profMenu(startScreen);
+				//stuMenu(startScreen);
 			}
 			else if(sceneIndex == 9) {
 				createArMenu(startScreen);
@@ -606,7 +606,7 @@ public class Login extends Application{
 	        gridPane.add(find, 2, 2);
 	        gridPane.add(code,1, 4);
 	        gridPane.add(close, 0, 4);
-	        gridPane.add(gen, 2, 4);
+	        gridPane.add(gen, 2, 5);
 	        gridPane.add(role, 4, 3);
 	        gridPane.add(del, 2, 3);
 	        gridPane.add(list, 3, 3);
@@ -828,7 +828,7 @@ public class Login extends Application{
 		//basic user menu
 				public void userMenu(Stage startScreen) {
 					System.out.println("User Menu");
-					startScreen.setTitle(String.format("User Menu: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Student Menu: Logged in as, %s", tem.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -848,19 +848,29 @@ public class Login extends Application{
 			        Scene sc = new Scene(bPane, 900, 500);
 			        
 			      //Create Labels
-			        Label User = new Label(String.format("Welcome User: %s", tem.username));
+			        Label User = new Label(String.format("Welcome Student: %s", tem.username));
 			        //logout button
 			        Button back = new Button("logout");
 			        //prefences button
 			        Button prof = new Button("Edit Profile");
+			        //article buttons
+			        Button view = new Button("View All Articles");
+			        Button ser = new Button("Search by Keyword");
 			        
+			        //textfields
+			        TextField tex = new TextField("Type Here");
+			        TextArea texArea = new TextArea("");
+			        texArea.setWrapText(true);
 
 			        //Add all controls to Grid
 			        gridPane.add(User, 0, 0);
-			        
+			        gridPane.add(ser, 3, 1);
+			        gridPane.add(view, 2, 0);
+			        gridPane.add(tex, 2, 1);
+			        gridPane.add(texArea, 2, 2);
 			        //to be added, edit user email, pref name, etc
 			        //gridPane.add(prof, 1, 0);
-			        gridPane.add(back, 2, 0);
+			        gridPane.add(back, 3, 0);
 			        
 			        // set the scene
 			        startScreen.setScene(sc);
@@ -893,6 +903,72 @@ public class Login extends Application{
 			                startScreen.close();
 				      }
 				    });
+					
+					view.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  databaseHelper = new DatabaseHelper();
+				  		try { 
+				  			
+				  			databaseHelper.connectToDatabase();  // Connect to the database
+
+				  			// Check if the database is empty
+				  			if (databaseHelper.isDatabaseEmpty()) {
+				  				System.out.println( "In-Memory Database  is empty" );
+				  				
+				  				
+				  			}
+				  			else {
+				  				texArea.setText(databaseHelper.displayArticles());
+				  			}
+				  		}
+						 catch (Exception e1) {
+							System.err.println("Database error: " + e1.getMessage());
+							e1.printStackTrace();
+						}
+						finally {
+							//System.out.println("Good Bye!!");
+							databaseHelper.closeConnection();
+						}
+				      
+				      }	  
+				     });
+					
+					ser.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  databaseHelper = new DatabaseHelper();
+				  		try { 
+				  			
+				  			databaseHelper.connectToDatabase();  // Connect to the database
+
+				  			// Check if the database is empty
+				  			if (databaseHelper.isDatabaseEmpty()) {
+				  				System.out.println( "In-Memory Database  is empty" );
+				  				
+				  				
+				  			}
+				  			else {
+				  				texArea.setText(databaseHelper.displayByKeyword(tex.getText()));
+				  			}
+				  		}
+						 catch (Exception e1) {
+							System.err.println("Database error: " + e1.getMessage());
+							e1.printStackTrace();
+						}
+						finally {
+							//System.out.println("Good Bye!!");
+							databaseHelper.closeConnection();
+						}
+				      
+				      }	  
+				     });
 					
 				}
 				
