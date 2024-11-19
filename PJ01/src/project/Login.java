@@ -130,6 +130,7 @@ public class Login extends Application{
 		System.out.println("Please Enter Password");
 		// storing the input in string s
 		String s = scanner.nextLine();
+		String input;
 		
 		// if s is equal to the suspected username's password, the user is valid
 		if(s.equals(user.password)) {
@@ -141,9 +142,10 @@ public class Login extends Application{
 			System.out.println("Error, incorrect password");
 			return false;
 		}
-		
 	}
 	
+	public static boolean checkChar(Scanner scanner, String allowed, String input) {
+		
 		while (!input.matches("[A-Za-z]")) {
 			System.out.println("Error, input is not a single char");
 			input = scanner.nextLine();
