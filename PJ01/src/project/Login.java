@@ -411,6 +411,8 @@ public class Login extends Application{
 	    		firstAdmin.password = adminPass.getText();
 	    		// adding 2 role (admin) to newly created user
 	    		firstAdmin.roles.add('a');
+	    		//add default group to admin
+	    		firstAdmin.groups.add("general");
 	    		// adding first user to list of usernames in system
 	    		users.add(firstAdmin);
 	    		// displaying log out message and sending program to loginScreen
@@ -566,7 +568,7 @@ public class Login extends Application{
 			TextField code = new TextField("");
 			
 			//create a new textfield for a OTP role
-			TextField role = new TextField("Roles: a, s or i");
+			TextField role = new TextField("Roles: a, s or i. Or type in group");
 			
 			//create a new textfield for a response
 			TextField response = new TextField("Awaiting Input");
@@ -594,9 +596,10 @@ public class Login extends Application{
 	        Button list = new Button("List Users");
 	        Button find = new Button("Find");
 	        Button art = new Button("Articles");
-	        Button upd = new Button("Update Role");
+	        Button upd = new Button("Add Role");
 	        Button rem = new Button("Remove Role");
-	        
+	        Button addgrp = new Button("Add Group");
+	        Button remgrp = new Button("Remove Group");
 	     
 
 	        gridPane.add(t, 1, 0);
@@ -606,7 +609,7 @@ public class Login extends Application{
 	        gridPane.add(find, 2, 2);
 	        gridPane.add(code,1, 4);
 	        gridPane.add(close, 0, 4);
-	        gridPane.add(gen, 2, 5);
+	        gridPane.add(gen, 4, 5);
 	        gridPane.add(role, 4, 3);
 	        gridPane.add(del, 2, 3);
 	        gridPane.add(list, 3, 3);
@@ -614,6 +617,8 @@ public class Login extends Application{
 	        gridPane.add(area, 1, 5);
 	        gridPane.add(upd, 2, 4);
 	        gridPane.add(rem, 3, 4);
+	        gridPane.add(addgrp, 2, 5);
+	        gridPane.add(remgrp, 3, 5);
 	        
 	        
 	        // set the scene
@@ -682,7 +687,7 @@ public class Login extends Application{
 		    		    }
 		    		if(check == false) {
 		    			users.get(tem.id).roles.add(role.getText().charAt(0));
-		    			response.setText("Roles updated!");
+		    			response.setText("Roles Added!");
 		    		}
 		    	}
 		    });
@@ -692,9 +697,55 @@ public class Login extends Application{
 		    {
 		    	if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
 		    		for (int i = 0; i < tem.roles.size(); i++) {
+		    			if(tem.roles.size() > 1) {
+		    				int admin = 0;
+		    				for(int j = 0; j<users.size();j++) {
+		    					if(users.get(i).roles.contains('a')) {
+		    						admin++;
+		    					}
+		    				}
 		    		      if(tem.roles.get(i).equals(role.getText().charAt(0))) {
-		    		    	  users.get(tem.id).roles.remove(i);
-		    		    	  response.setText("Role Removed!");
+		    		    	  if(role.getText().charAt(0) == 'a' && admin > 1) {
+		    		    		  users.get(tem.id).roles.remove(i);
+			    		    	  response.setText("Admin Role Removed!");
+		    		    	  }
+		    		    	  else if(role.getText().charAt(0) == 'a' && admin == 1) {
+		    		    	  response.setText("Can't Remove last Admin!");
+		    		    	  }
+		    		    	  else {
+		    		    		  users.get(tem.id).roles.remove(i);
+			    		    	  response.setText("Role Removed!");
+		    		    	  }
+		    		      }
+		    			}
+		    			else {
+		    				response.setText("That's their only Role!");
+		    			}
+		    		   }
+		    	}
+		    });
+			
+			//remove selected user's group if there
+			addgrp.setOnAction((ActionEvent e) ->
+		    {
+		    	if(tem.groups.contains(role.getText())) {
+		    		response.setText("User already in Group!");
+		    		    
+		    	}
+		    	else {
+		    		users.get(tem.id).groups.add(role.getText());
+		    		response.setText("Group Added!");
+		    	}
+		    });
+			
+			//remove selected user's group if there
+			remgrp.setOnAction((ActionEvent e) ->
+		    {
+		    	if(tem.groups.contains(role.getText())) {
+		    		for (int i = 0; i < tem.groups.size(); i++) {
+		    		      if(tem.groups.get(i).equals(role.getText())) {
+		    		    	  users.get(tem.id).groups.remove(i);
+		    		    	  response.setText("Group Removed!");
 		    		      }
 		    		    }
 		    	}
@@ -717,12 +768,25 @@ public class Login extends Application{
 			    		for(int j = 0; j < users.get(i).roles.size()-1; j++) {
 			    			tmp  = tmp + users.get(i).roles.get(j) + ", ";
 			    		}
-			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1) + "\n";
+			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1);
 		    		}
 		    		else {
 		    			tmp  = tmp + users.get(i).roles.get(0) + "\n";
 		    		}
+		    		
+		    		tmp = tmp + "Groups: ";
+		    		//add groups to printout
+		    		if(users.get(i).groups.size() > 1) {
+			    		for(int j = 0; j < users.get(i).groups.size()-1; j++) {
+			    			tmp  = tmp + users.get(i).groups.get(j) + ", ";
+			    		}
+			    		tmp  = tmp + users.get(i).groups.get(users.get(i).groups.size()-1) + "\n";
+		    		}
+		    		else {
+		    			tmp  = tmp + users.get(i).groups.get(0) + "\n";
+		    		}
 		    		temp = temp + tmp;
+		    		
 		    		System.out.print(temp);
 		    	}
 		    	area.setText(temp);
@@ -808,6 +872,8 @@ public class Login extends Application{
 		        	userer.password = uPass.getText();
 		    		// adding the otp role to newly created user
 					userer.roles.add(otpR);
+					//add default general group to every user
+					userer.groups.add("general");
 		    		// adding first user to list of usernames in system
 		    		users.add(userer);
 		    		// displaying log out message and sending program to loginScreen
@@ -922,7 +988,8 @@ public class Login extends Application{
 				  				
 				  			}
 				  			else {
-				  				texArea.setText(databaseHelper.displayArticles());
+				  				
+				  					texArea.setText(databaseHelper.displayByGroups(tem.groups));
 				  			}
 				  		}
 						 catch (Exception e1) {
@@ -1068,6 +1135,7 @@ public class Login extends Application{
 			        Button back = new Button("Back");
 			        Button article = new Button("Create Article");
 			        Button view = new Button("View All Articles");
+			        Button decrypt = new Button("Decrypted Articles");
 			        Button up = new Button("Update Article");
 			        Button del = new Button("Delete Article(s)");
 			        Button ser = new Button("Search by Keyword");
@@ -1086,12 +1154,15 @@ public class Login extends Application{
 			        gridPane.add(Article, 0,0);
 			        gridPane.add(article, 1, 0);
 			        gridPane.add(view, 2, 0);
+			        gridPane.add(decrypt, 2, 3);
 			        gridPane.add(up, 0, 1);
 			        gridPane.add(del, 1, 1);
 			        gridPane.add(tex, 2, 1);
 			        gridPane.add(back, 3, 0);
 			        gridPane.add(ser, 3, 1);
+			        
 			        gridPane.add(texArea, 2, 2);
+			        
 			        gridPane.add(backupBtn, 3, 2);  // Add Backup button
 				    gridPane.add(restoreBtn, 3, 3);  // Add Restore button
 
@@ -1125,7 +1196,40 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				texArea.setText(databaseHelper.displayArticles());
+					  				texArea.setText(databaseHelper.displayEncryptedArticles());
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
+						decrypt.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				texArea.setText(databaseHelper.displayDecryptedArticles());
 					  			}
 					  		}
 							 catch (Exception e1) {

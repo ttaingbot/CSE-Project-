@@ -15,6 +15,7 @@ public class User {
 	String preferredName;
 	String topic;
 	int id; //id to be used to update users
+	ArrayList<String> groups = new ArrayList<String>();
 	
 	// going to arrange roles by char - a=admin, s=student, i=instructor
 	ArrayList<Character> roles = new ArrayList<Character>();
@@ -23,13 +24,10 @@ public class User {
 	// boolean to quickly check if they have an preferred name
 	boolean prefName;
 	
-	
 	// constructor
 	public User() {
 		topic = "Intermediate";
 		prefName = false;
 	}
-	
-	
 	
 }
