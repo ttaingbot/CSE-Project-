@@ -68,6 +68,7 @@ Contributions are welcome! Please fork the repository and create a pull request 
 - [ttaingbot](https://github.com/ttaingbot)
 - [Kalyanam Dewri](https://github.com/kalyanamdewri)
 - [Kage](https://github.com/Kage-Bot)
+- [Arnav Amin](https://github.com/aamin15)
 
 ## Acknowledgments
 
