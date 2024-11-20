@@ -1322,6 +1322,7 @@ public class Login extends Application{
 			        Label keys = new Label("Keywords");
 			        Label bod = new Label("Body");
 			        Label ref = new Label("References");
+			        Label grp = new Label("Group");
 			        Label oth = new Label("Other");
 			        
 			        //all the textfields
@@ -1331,6 +1332,7 @@ public class Login extends Application{
 			        TextField keyst = new TextField("");
 			        TextField bodt = new TextField("");
 			        TextField reft = new TextField("");
+			        TextField grop = new TextField("");
 			        TextField otht = new TextField("");
 			        
 			        //logout button
@@ -1347,7 +1349,8 @@ public class Login extends Application{
 			        gridPane.add(keys, 0,3);
 			        gridPane.add(bod, 0,4);
 			        gridPane.add(ref, 0,5);
-			        gridPane.add(oth, 0,6);
+			        gridPane.add(grp, 0,6);
+			        gridPane.add(oth, 0,7);
 			        
 			        //right side
 			        gridPane.add(headt, 1,0);
@@ -1356,7 +1359,8 @@ public class Login extends Application{
 			        gridPane.add(keyst, 1,3);
 			        gridPane.add(bodt, 1,4);
 			        gridPane.add(reft, 1,5);
-			        gridPane.add(otht, 1,6);
+			        gridPane.add(grop, 1,6);
+			        gridPane.add(otht, 1,7);
 			        
 			        gridPane.add(back, 7, 0);
 			        gridPane.add(sub, 7, 1);
@@ -1398,7 +1402,7 @@ public class Login extends Application{
 				  					System.out.println( "Please Include a Header" );
 				  				}
 				  				else {
-				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), grop.getText(), otht.getText());
 				  					System.out.println( "Article Added!" );
 				  					sceneIndex = 6;
 						    		start(startScreen);
@@ -1412,7 +1416,7 @@ public class Login extends Application{
 				  					System.out.println( "Please Include a Header" );
 				  				}
 				  				else {
-				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					databaseHelper.register(headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), grop.getText(), otht.getText());
 				  					System.out.println( "Article Added!" );
 				  					sceneIndex = 6;
 						    		start(startScreen);
@@ -1463,6 +1467,7 @@ public class Login extends Application{
 			        Label keys = new Label("Keywords");
 			        Label bod = new Label("Body");
 			        Label ref = new Label("References");
+			        Label grp = new Label("Group");
 			        Label oth = new Label("Other");
 			        
 			        //all the textfields
@@ -1472,6 +1477,7 @@ public class Login extends Application{
 			        TextField keyst = new TextField("");
 			        TextField bodt = new TextField("");
 			        TextField reft = new TextField("");
+			        TextField grpt = new TextField("");
 			        TextField otht = new TextField("");
 			        
 			        //logout button
@@ -1488,7 +1494,8 @@ public class Login extends Application{
 			        gridPane.add(keys, 0,3);
 			        gridPane.add(bod, 0,4);
 			        gridPane.add(ref, 0,5);
-			        gridPane.add(oth, 0,6);
+			        gridPane.add(grp, 0,6);
+			        gridPane.add(oth, 0,7);
 			        
 			        //right side
 			        gridPane.add(headt, 1,0);
@@ -1497,7 +1504,8 @@ public class Login extends Application{
 			        gridPane.add(keyst, 1,3);
 			        gridPane.add(bodt, 1,4);
 			        gridPane.add(reft, 1,5);
-			        gridPane.add(otht, 1,6);
+			        gridPane.add(grpt, 1,6);
+			        gridPane.add(otht, 1,7);
 			        
 			        gridPane.add(back, 7, 0);
 			        gridPane.add(sub, 7, 1);
@@ -1541,7 +1549,7 @@ public class Login extends Application{
 				  					System.out.println( "Please Include a Header" );
 				  				}
 				  				else {
-				  					databaseHelper.updateArticle(tempid, headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), otht.getText());
+				  					databaseHelper.updateArticle(tempid, headt.getText(), titlt.getText(), dest.getText(), keyst.getText(), bodt.getText(), reft.getText(), grpt.getText(), otht.getText());
 				  				}
 				  			}
 				  		}

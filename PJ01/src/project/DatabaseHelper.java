@@ -49,6 +49,7 @@ class DatabaseHelper {
 				+ "keywords VARCHAR(255), "
 				+ "body VARCHAR(255), "
 				+ "references VARCHAR(255), "
+				+ "group VARCHAR(255), "
 				+ "other VARCHAR(255))";
 		try (PreparedStatement pstmt = connection.prepareStatement(userTable)) {
 			pstmt.execute();
@@ -66,9 +67,9 @@ class DatabaseHelper {
 		return true;
 	}
 
-	public void register(String header, String title, String description, String keywords, String body, String references, String other) throws Exception {
+	public void register(String header, String title, String description, String keywords, String body, String references, String group, String other) throws Exception {
 		
-		String insertArticle = "INSERT INTO Project (header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO Project (header, title, description, keywords, body, references, group, other) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, header);
 			pstmt.setString(2, title);
@@ -76,7 +77,8 @@ class DatabaseHelper {
 			pstmt.setString(4, keywords);
 			pstmt.setString(5, body);
 			pstmt.setString(6, references);
-			pstmt.setString(7, other);
+			pstmt.setString(7, group);
+			pstmt.setString(8, other);
 			pstmt.executeUpdate();
 		}
 	}
@@ -179,6 +181,59 @@ class DatabaseHelper {
 	    
 	}
 	
+	//display by group
+	public String displayByGroup(String group) throws SQLException {
+	    String sql = "SELECT * FROM Project WHERE group LIKE ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+	        pstmt.setString(1, "%" + group + "%"); // Use LIKE to search for the keyword in the keywords column
+	        ResultSet rs = pstmt.executeQuery();
+	        String ret = "";
+			String temp;
+
+	        boolean hasResults = false; // Flag to check if any articles are found
+	        while (rs.next()) { 
+	            hasResults = true; // Set the flag to true if we have results
+
+	            // Retrieve by column name 
+	            long id = rs.getLong("id"); 
+	            String header = rs.getString("header");
+	            String title = rs.getString("title");  
+	            String description = rs.getString("description"); 
+	            String keys = rs.getString("keywords"); 
+	            String bod = rs.getString("body"); 
+	            String refer = rs.getString("references"); 
+	            String other = rs.getString("other");
+
+	            // Display values 
+	            System.out.print("\n ID: " + id); 
+	            System.out.print("\n Header: " + header); 
+	            System.out.print("\n Title: " + title); 
+	            System.out.print("\n Description: " + description); 
+	            System.out.print("\n Keyword(s): " + keys); 
+	            System.out.print("\n Body: " + bod); 
+	            System.out.print("\n Reference(s): " + refer); 
+	            System.out.print("\n Other(s): " + other + "\n");
+	            
+	            temp = "ID: " + id + "\n" +
+						"Header: " + header + "\n" +
+						"Title: " + title + "\n" +
+						"Description: " + description + "\n" +
+						"Keyword(s): " + keys + "\n" + 
+						"Body: " + bod + "\n" + 
+						"Reference(s): " + refer + "\n" +
+						"Other: " + other + "\n";
+						
+						ret = ret + temp;
+	        }
+
+	        if (!hasResults) {
+	            System.out.println("No articles found with: '" + group + "' in groups.");
+	        }
+	        return ret;
+	    }
+	    
+	}
+	
 	//delete selected article
 	public void deleteArticle(long id) throws SQLException {
 	    String deleteSQL = "DELETE FROM Project WHERE id = ?";
@@ -195,8 +250,8 @@ class DatabaseHelper {
 	}
 	
 	//function to select the article based on ID and then update that particular article's contents
-	public void updateArticle(long id, String header, String title, String description, String keywords, String body, String references, String other) throws SQLException {
-	    String updateSQL = "UPDATE Project SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, other = ? WHERE id = ?";
+	public void updateArticle(long id, String header, String title, String description, String keywords, String body, String references, String group, String other) throws SQLException {
+	    String updateSQL = "UPDATE Project SET header = ?, title = ?, description = ?, keywords = ?, body = ?, references = ?, group = ?,other = ? WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
 	        pstmt.setString(1, header);
 	        pstmt.setString(2, title);
@@ -204,8 +259,9 @@ class DatabaseHelper {
 	        pstmt.setString(4, keywords);
 	        pstmt.setString(5, body);
 	        pstmt.setString(6, references);
-	        pstmt.setString(7, other);
-	        pstmt.setLong(8, id); // Set the id parameter in the SQL query
+	        pstmt.setString(7, group);
+	        pstmt.setString(8, other);
+	        pstmt.setLong(9, id); // Set the id parameter in the SQL query
 	        
 	        int rowsAffected = pstmt.executeUpdate();
 	        if (rowsAffected > 0) {
@@ -256,6 +312,7 @@ class DatabaseHelper {
 	                         rs.getString("keywords") + "," +
 	                         rs.getString("body") + "," +
 	                         rs.getString("references") + "," +
+	                         rs.getString("group") + "," +
 	                         rs.getString("other") + "\n");
 	        }
 	        System.out.println("Data backed up to " + fileName);
@@ -279,10 +336,11 @@ class DatabaseHelper {
 	            String keywords = fields[4];
 	            String body = fields[5];
 	            String references = fields[6];
-	            String other = fields[7];
+	            String group = fields[7];
+	            String other = fields[8];
 
 	            if (!merge || !articleExists(id)) {
-	                String insertSQL = "INSERT INTO Project (id, header, title, description, keywords, body, references, other) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	                String insertSQL = "INSERT INTO Project (id, header, title, description, keywords, body, references, group, other) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	                try (PreparedStatement pstmt = connection.prepareStatement(insertSQL)) {
 	                    pstmt.setLong(1, id);
 	                    pstmt.setString(2, header);
@@ -291,7 +349,8 @@ class DatabaseHelper {
 	                    pstmt.setString(5, keywords);
 	                    pstmt.setString(6, body);
 	                    pstmt.setString(7, references);
-	                    pstmt.setString(8, other);
+	                    pstmt.setString(8, group);
+	                    pstmt.setString(9, other);
 	                    pstmt.executeUpdate();
 	                }
 	            }
