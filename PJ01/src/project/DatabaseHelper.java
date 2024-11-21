@@ -136,6 +136,7 @@ class DatabaseHelper {
 			String keys = rs.getString("keywords"); 
 			String bod = rs.getString("body"); 
 			String refer = rs.getString("references"); 
+			String groups = rs.getString("groups");
 			String other = rs.getString("other");
 			
 
@@ -147,6 +148,7 @@ class DatabaseHelper {
 			System.out.print("\n Keyword(s): " + keys); 
 			System.out.print("\n Body: " + bod); 
 			System.out.print("\n Reference(s): " + refer); 
+			System.out.print("\n Groups(s): " + groups);
 			System.out.print("\n Other(s): " + other + "\n");
 			
 			temp = "ID: " + id + "\n" +
@@ -156,6 +158,7 @@ class DatabaseHelper {
 					"Keyword(s): " + keys + "\n" + 
 					"Body: " + bod + "\n" + 
 					"Reference(s): " + refer + "\n" +
+					"Gruop(s): " + groups + "\n" +
 					"Other: " + other + "\n";
 					
 					ret = ret + temp;
@@ -267,7 +270,7 @@ class DatabaseHelper {
 	    String ret = "";
 	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 	    	for(int i = 0; i < groups.size(); i++) {
-		        pstmt.setString(1, "%" + groups + "%"); // Use LIKE to search for the keyword in the keywords column
+		        pstmt.setString(1, "%" + groups.get(i) + "%"); // Use LIKE to search for the keyword in the keywords column
 		        ResultSet rs = pstmt.executeQuery();
 		        
 				String temp;

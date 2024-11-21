@@ -768,7 +768,7 @@ public class Login extends Application{
 			    		for(int j = 0; j < users.get(i).roles.size()-1; j++) {
 			    			tmp  = tmp + users.get(i).roles.get(j) + ", ";
 			    		}
-			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1);
+			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1 + '\n');
 		    		}
 		    		else {
 		    			tmp  = tmp + users.get(i).roles.get(0) + "\n";
