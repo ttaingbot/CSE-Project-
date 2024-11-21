@@ -348,7 +348,15 @@ class DatabaseHelper {
 	        pstmt.setString(2, title);
 	        pstmt.setString(3, description);
 	        pstmt.setString(4, keywords);
-	        pstmt.setString(5, body);
+	        try {
+				pstmt.setString(5, encrypt(body));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	        pstmt.setString(6, references);
 	        pstmt.setString(7, groups);
 	        pstmt.setString(8, other);

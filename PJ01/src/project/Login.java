@@ -23,6 +23,7 @@ import java.sql.*;
 public class Login extends Application{
 	//initiallize global variables
 	User tem = new User();
+	User logged = new User();
 	int sceneIndex = 0;
 	long tempid;
 	double OTP;
@@ -502,21 +503,21 @@ public class Login extends Application{
 	    				  //check if the user is an admin and proceed to admin login
 	    				  if((users.get(i).roles.contains('a')))
 	    				  {
-	    					tem = users.get(i);
+	    					 logged = users.get(i);
 	    					sceneIndex = 3;
 		    				start(startScreen);
 		    				startScreen.close();
 	    				  }
 	    				  //check if they are an instructor
 	    				  else if(users.get(i).roles.contains('i')){
-	    					  tem=users.get(i);
+	    					  logged=users.get(i);
 		    				  sceneIndex = 7;
 		    				  start(startScreen);
 		    				  startScreen.close();
 	    				  }
 	    				  //else go to normal login
 	    				  else {
-	    					  tem=users.get(i);
+	    					  logged=users.get(i);
 		    				  sceneIndex = 4;
 		    				  start(startScreen);
 		    				  startScreen.close();
@@ -548,7 +549,7 @@ public class Login extends Application{
 	//Admin menu screen
 		public void adminMenu(Stage startScreen) {
 			System.out.println("Admin Menu");
-			startScreen.setTitle(String.format("Admin Menu: Logged in as, %s", tem.username));
+			startScreen.setTitle(String.format("Admin Menu: Logged in as, %s", logged.username));
 			
 			
 			//initialize a grid setup for the windows
@@ -712,7 +713,7 @@ public class Login extends Application{
 		    			if(tem.roles.size() > 1) {
 		    				int admin = 0;
 		    				for(int j = 0; j<users.size();j++) {
-		    					if(users.get(i).roles.contains('a')) {
+		    					if(users.get(j).roles.contains('a')) {
 		    						admin++;
 		    					}
 		    				}
@@ -768,7 +769,9 @@ public class Login extends Application{
 		    {
 		    	sceneIndex = 2;
 		    	start(startScreen);
-		        startScreen.close();      
+		        startScreen.close();  
+		        tem = null;
+		        logged = null;
 		    }); 
 			//list users
 			list.setOnAction((ActionEvent e) ->
@@ -776,14 +779,18 @@ public class Login extends Application{
 		    	String temp = "";
 		    	for(int i = 0; i < users.size(); i++){
 		    		String tmp = "User: " + users.get(i).username + " ,Role(s): ";
+		    		
 		    		if(users.get(i).roles.size() > 1) {
 			    		for(int j = 0; j < users.get(i).roles.size()-1; j++) {
 			    			tmp  = tmp + users.get(i).roles.get(j) + ", ";
 			    		}
-			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1 + '\n');
+			    		tmp  = tmp + users.get(i).roles.get(users.get(i).roles.size()-1) + "\n";
+		    		}
+		    		else if(users.get(i).roles.size() == 1){
+		    			tmp  = tmp + users.get(i).roles.get(0) + "\n";
 		    		}
 		    		else {
-		    			tmp  = tmp + users.get(i).roles.get(0) + "\n";
+		    			tmp = tmp + "No Roles found \n";
 		    		}
 		    		
 		    		tmp = tmp + "Groups: ";
@@ -794,8 +801,11 @@ public class Login extends Application{
 			    		}
 			    		tmp  = tmp + users.get(i).groups.get(users.get(i).groups.size()-1) + "\n";
 		    		}
-		    		else {
+		    		else if(users.get(i).groups.size() == 1){
 		    			tmp  = tmp + users.get(i).groups.get(0) + "\n";
+		    		}
+		    		else {
+		    			tmp = tmp + "No Groups found \n";
 		    		}
 		    		temp = temp + tmp;
 		    		
@@ -808,7 +818,8 @@ public class Login extends Application{
 		    {
 		    	sceneIndex = 6;
 		    	start(startScreen);
-		        startScreen.close();      
+		        startScreen.close();
+		        tem = null;
 		    });
 		}
 		
@@ -906,7 +917,7 @@ public class Login extends Application{
 		//basic user menu
 				public void userMenu(Stage startScreen) {
 					System.out.println("User Menu");
-					startScreen.setTitle(String.format("Student Menu: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Student Menu: Logged in as, %s", logged.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -926,7 +937,7 @@ public class Login extends Application{
 			        Scene sc = new Scene(bPane, 900, 500);
 			        
 			      //Create Labels
-			        Label User = new Label(String.format("Welcome Student: %s", tem.username));
+			        Label User = new Label(String.format("Welcome Student: %s", logged.username));
 			        //logout button
 			        Button back = new Button("logout");
 			        //prefences button
@@ -1001,7 +1012,7 @@ public class Login extends Application{
 				  			}
 				  			else {
 				  				
-				  					texArea.setText(databaseHelper.displayByGroups(tem.groups));
+				  					texArea.setText(databaseHelper.displayByGroups(logged.groups));
 				  			}
 				  		}
 						 catch (Exception e1) {
@@ -1054,7 +1065,7 @@ public class Login extends Application{
 				//basic instructor menu
 				public void instrMenu(Stage startScreen) {
 					System.out.println("Instructor Menu");
-					startScreen.setTitle(String.format("Instructor Menu: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Instructor Menu: Logged in as, %s", logged.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -1074,7 +1085,7 @@ public class Login extends Application{
 			        Scene sc = new Scene(bPane, 900, 500);
 			        
 			      //Create Labels
-			        Label User = new Label(String.format("Welcome Instructor: %s", tem.username));
+			        Label User = new Label(String.format("Welcome Instructor: %s", logged.username));
 			        //logout button
 			        Button back = new Button("logout");
 			        Button ar = new Button("Articles");
@@ -1122,7 +1133,7 @@ public class Login extends Application{
 				//main article menu to select what to do
 				public void artMenu(Stage startScreen) {
 					System.out.println("Article Menu");
-					startScreen.setTitle(String.format("Article Menu: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Article Menu: Logged in as, %s", logged.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -1375,7 +1386,7 @@ public class Login extends Application{
 				      public void handle(ActionEvent e)
 				      {
 				    	  //check if user is an admin
-				    	  if(tem.roles.contains('a')) {
+				    	  if(logged.roles.contains('a')) {
 				    		//back to admin screen
 				    		    sceneIndex = 3;
 					    		start(startScreen);
@@ -1412,7 +1423,7 @@ public class Login extends Application{
 				// article creation menu 
 				public void createArMenu(Stage startScreen) {
 					System.out.println("Article Creation");
-					startScreen.setTitle(String.format("Article Creation: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Article Creation: Logged in as, %s", logged.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
@@ -1557,7 +1568,7 @@ public class Login extends Application{
 				// article update menu 
 				public void updArMenu(Stage startScreen) {
 					System.out.println("Article Update");
-					startScreen.setTitle(String.format("Article Update: Logged in as, %s", tem.username));
+					startScreen.setTitle(String.format("Article Update: Logged in as, %s", logged.username));
 					
 					//initialize a grid setup for the windows
 					BorderPane bPane = new BorderPane();
