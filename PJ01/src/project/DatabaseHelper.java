@@ -158,7 +158,7 @@ class DatabaseHelper {
 					"Keyword(s): " + keys + "\n" + 
 					"Body: " + bod + "\n" + 
 					"Reference(s): " + refer + "\n" +
-					"Gruop(s): " + groups + "\n" +
+					"Group(s): " + groups + "\n" +
 					"Other: " + other + "\n";
 					
 					ret = ret + temp;
@@ -184,6 +184,7 @@ class DatabaseHelper {
 			String keys = rs.getString("keywords"); 
 			String bod = rs.getString("body"); 
 			String refer = rs.getString("references"); 
+			String groups = rs.getString("groups");
 			String other = rs.getString("other");
 			
 
@@ -195,6 +196,7 @@ class DatabaseHelper {
 			System.out.print("\n Keyword(s): " + keys); 
 			System.out.print("\n Body: " + decrypt(bod)); 
 			System.out.print("\n Reference(s): " + refer); 
+			System.out.print("\n Groups(s): " + groups);
 			System.out.print("\n Other(s): " + other + "\n");
 			
 			temp = "ID: " + id + "\n" +
@@ -204,6 +206,7 @@ class DatabaseHelper {
 					"Keyword(s): " + keys + "\n" + 
 					"Body: " + decrypt(bod) + "\n" + 
 					"Reference(s): " + refer + "\n" +
+					"Group(s): " + groups + "\n" +
 					"Other: " + other + "\n";
 					
 					ret = ret + temp;
@@ -285,7 +288,7 @@ class DatabaseHelper {
 		            String title = rs.getString("title");  
 		            String description = rs.getString("description"); 
 		            String keys = rs.getString("keywords"); 
-		            String bod = rs.getString("encryptedBody"); 
+		            String bod = rs.getString("body"); 
 		            String refer = rs.getString("references"); 
 		            String other = rs.getString("other");
 	
