@@ -215,54 +215,71 @@ class DatabaseHelper {
 		return ret;
 	}
 	
-	public String displayByKeyword(String keyword) throws SQLException {
-	    String sql = "SELECT * FROM DataBased WHERE keywords LIKE ?";
+	public String displayByKeyword(String keyword, ArrayList<String> groups) throws SQLException {
+	    String sql = "SELECT * FROM DataBased WHERE (keywords LIKE ? OR title LIKE ? OR references LIKE ?) AND groups LIKE ?";
+	    String ret = "";
 	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-	        pstmt.setString(1, "%" + keyword + "%"); // Use LIKE to search for the keyword in the keywords column
-	        ResultSet rs = pstmt.executeQuery();
-	        String ret = "";
-			String temp;
-
-	        boolean hasResults = false; // Flag to check if any articles are found
-	        while (rs.next()) { 
-	            hasResults = true; // Set the flag to true if we have results
-
-	            // Retrieve by column name 
-	            long id = rs.getLong("id"); 
-	            String header = rs.getString("header");
-	            String title = rs.getString("title");  
-	            String description = rs.getString("description"); 
-	            String keys = rs.getString("keywords"); 
-	            String bod = rs.getString("body"); 
-	            String refer = rs.getString("references"); 
-	            String other = rs.getString("other");
-
-	            // Display values 
-	            System.out.print("\n ID: " + id); 
-	            System.out.print("\n Header: " + header); 
-	            System.out.print("\n Title: " + title); 
-	            System.out.print("\n Description: " + description); 
-	            System.out.print("\n Keyword(s): " + keys); 
-	            System.out.print("\n Body: " + bod); 
-	            System.out.print("\n Reference(s): " + refer); 
-	            System.out.print("\n Other(s): " + other + "\n");
-	            
-	            temp = "ID: " + id + "\n" +
-						"Header: " + header + "\n" +
-						"Title: " + title + "\n" +
-						"Description: " + description + "\n" +
-						"Keyword(s): " + keys + "\n" + 
-						"Body: " + bod + "\n" + 
-						"Reference(s): " + refer + "\n" +
-						"Other: " + other + "\n";
-						
-						ret = ret + temp;
-	        }
-
-	        if (!hasResults) {
-	            System.out.println("No articles found with: '" + keyword + "' in keywords.");
-	        }
-	        return ret;
+	    	for(int i = 0; i < groups.size(); i++) {
+	    		//checks if the keyword is in title, references, OR keywords
+		        pstmt.setString(1, "%" + keyword + "%"); 
+		        pstmt.setString(2, "%" + keyword + "%");
+		        pstmt.setString(3, "%" + keyword + "%");
+		        pstmt.setString(4, "%" + groups.get(i) + "%");
+		        ResultSet rs = pstmt.executeQuery();
+		        
+				String temp;
+	
+		        boolean hasResults = false; // Flag to check if any articles are found
+		        while (rs.next()) { 
+		            hasResults = true; // Set the flag to true if we have results
+	
+		            // Retrieve by column name 
+		            long id = rs.getLong("id"); 
+		            String header = rs.getString("header");
+		            String title = rs.getString("title");  
+		            String description = rs.getString("description"); 
+		            String keys = rs.getString("keywords"); 
+		            String bod = rs.getString("body"); 
+		            String refer = rs.getString("references"); 
+		            String other = rs.getString("other");
+	
+		            // Display values 
+		            System.out.print("\n ID: " + id); 
+		            System.out.print("\n Header: " + header); 
+		            System.out.print("\n Title: " + title); 
+		            System.out.print("\n Description: " + description); 
+		            System.out.print("\n Keyword(s): " + keys); 
+		            try {
+						System.out.print("\n Body: " + decrypt(bod));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+		            System.out.print("\n Reference(s): " + refer); 
+		            System.out.print("\n Other(s): " + other + "\n");
+		            temp = "";
+		            try {
+						temp = "ID: " + id + "\n" +
+								"Header: " + header + "\n" +
+								"Title: " + title + "\n" +
+								"Description: " + description + "\n" +
+								"Keyword(s): " + keys + "\n" + 
+								"Body: " + decrypt(bod) + "\n" + 
+								"Reference(s): " + refer + "\n" +
+								"Other: " + other + "\n";
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+							
+							ret = ret + temp;
+		        }
+	
+		        if (!hasResults) {
+		            System.out.println("No articles found with: '" + groups + "' in groups.");
+		        }
+	    	}
+	    	return ret;
 	    }
 	    
 	}

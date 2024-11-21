@@ -1045,7 +1045,7 @@ public class Login extends Application{
 				  				
 				  			}
 				  			else {
-				  				texArea.setText(databaseHelper.displayByKeyword(tex.getText()));
+				  				texArea.setText(databaseHelper.displayByKeyword(tex.getText(), logged.groups));
 				  			}
 				  		}
 						 catch (Exception e1) {
@@ -1362,7 +1362,7 @@ public class Login extends Application{
 					  				
 					  			}
 					  			else {
-					  				texArea.setText(databaseHelper.displayByKeyword(tex.getText()));
+					  				texArea.setText(databaseHelper.displayByKeyword(tex.getText(), logged.groups));
 					  			}
 					  		}
 							 catch (Exception e1) {
@@ -1693,6 +1693,7 @@ public class Login extends Application{
 				     });
 					
 				}
+				
 	
 	public static void main(String[] args) {
 		launch(args);
