@@ -306,15 +306,20 @@ class DatabaseHelper {
 					} 
 		            System.out.print("\n Reference(s): " + refer); 
 		            System.out.print("\n Other(s): " + other + "\n");
-		            
-		            temp = "ID: " + id + "\n" +
-							"Header: " + header + "\n" +
-							"Title: " + title + "\n" +
-							"Description: " + description + "\n" +
-							"Keyword(s): " + keys + "\n" + 
-							"Body: " + bod + "\n" + 
-							"Reference(s): " + refer + "\n" +
-							"Other: " + other + "\n";
+		            temp = "";
+		            try {
+						temp = "ID: " + id + "\n" +
+								"Header: " + header + "\n" +
+								"Title: " + title + "\n" +
+								"Description: " + description + "\n" +
+								"Keyword(s): " + keys + "\n" + 
+								"Body: " + decrypt(bod) + "\n" + 
+								"Reference(s): " + refer + "\n" +
+								"Other: " + other + "\n";
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 							
 							ret = ret + temp;
 		        }
