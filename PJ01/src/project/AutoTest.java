@@ -17,7 +17,7 @@ class AutoTest {
 		testUser.username = "user";
 		testUser.password = "password";
 		testUser.id = 1;
-		testUser.roles.add('s');
+		testUser.roles.add('a');
 		testUser.groups.add("general");
 		
 		assertEquals("general", getGroups(testUser));
@@ -43,8 +43,8 @@ class AutoTest {
 		testUser.username = "user";
 		testUser.password = "password";
 		testUser.id = 1;
-		testUser.roles.add('s');
-		testUser.groups.add("general, Special, Advanced");
+		testUser.roles.add('i');
+		testUser.groups.add("general, Advanced");
 		
 		assertEquals("general, Special, Advanced", getGroups(testUser));
 	}

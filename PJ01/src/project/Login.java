@@ -309,6 +309,9 @@ public class Login extends Application{
 			else if(sceneIndex == 10) {
 				updArMenu(startScreen);
 			}
+			else if(sceneIndex == 11) {
+				instartMenu(startScreen);
+			}
 			else {
 				System.out.print("goodbye!");
 			}
@@ -655,6 +658,7 @@ public class Login extends Application{
 		    			  kill = true;
 		    			  tem = users.get(i);
 		    			  tem.id = i;
+		    			  System.out.print(tem.id);
 		    			  response.setText("User Found! Type Yes here to confirm");
 		    		  }
 		    		  if(kill == false) {
@@ -668,12 +672,27 @@ public class Login extends Application{
 		    {
 		    	if(response.getText().equals("Yes")) {
 			        if( kill == true) {
+			        	int admin = 0;
+	    				for(int j = 0; j<users.size();j++) {
+	    					if(users.get(j).roles.contains('a')) {
+	    						admin++;
+	    					}
+			        	if(admin != 1 && users.get(tem.id).roles.contains('a')) {
 			        	users.remove(users.indexOf(tem));
 			        	kill = false;
-			        	response.setText("User Deleted");
+			        	response.setText("Admin Deleted");
+			        	}
+			        	else if(admin == 1 && users.get(tem.id).roles.contains('a')) {
+			        		response.setText("Can't Delete Last Admin!");
+			        	}
+			        	else {
+			        		users.remove(users.indexOf(tem));
+				        	kill = false;
+				        	response.setText("User Deleted");
+			        	}
 			        }
 		    	}
-		    });
+		    }});
 			
 			//update selected user's roles
 			upd.setOnAction((ActionEvent e) ->
@@ -1122,7 +1141,7 @@ public class Login extends Application{
 				      //when the submit button is pressed
 				      public void handle(ActionEvent e)
 				      {
-				    		sceneIndex = 6;
+				    		sceneIndex = 11;
 				    		start(startScreen);
 			                startScreen.close();
 				      }
@@ -1266,6 +1285,263 @@ public class Login extends Application{
 					      
 					      }	  
 					     });
+						
+						del.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				databaseHelper.deleteArticle((Long.parseLong(tex.getText().trim())));
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
+						up.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				if(databaseHelper.articleExists(Long.parseLong(tex.getText().trim()))) {
+					  					tempid = Long.parseLong(tex.getText().trim());
+							    		//change to update screen
+							    		    sceneIndex = 10;
+								    		start(startScreen);
+							                startScreen.close();
+							                databaseHelper.closeConnection();
+							    	  }
+					  				else {
+					  					System.out.println("Please input a valid ID");
+					  				}
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
+							
+						ser.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				texArea.setText(databaseHelper.displayByKeyword(tex.getText(), logged.groups));
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });	
+						
+					      
+					
+					back.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  //check if user is an admin
+				    	  if(logged.roles.contains('a')) {
+				    		//back to admin screen
+				    		    sceneIndex = 3;
+					    		start(startScreen);
+				                startScreen.close();
+				    		  
+				    	  }
+				    	  //they are an instructor without admin roles
+				    	  else {
+				    		  //back to instructor screen
+				    		    sceneIndex = 7;
+					    		start(startScreen);
+				                startScreen.close();
+				    	  }
+				      }
+				    });
+					
+					article.setOnAction(new EventHandler<ActionEvent>()
+				    {
+				      @Override      
+				      //when the submit button is pressed
+				      public void handle(ActionEvent e)
+				      {
+				    	  //change to create article screen
+				    	  sceneIndex = 9;
+				    		start(startScreen);
+			                startScreen.close();
+				      }
+				    });
+					
+					
+					
+				}
+				
+				//instructor article menu
+				//main article menu to select what to do
+				public void instartMenu(Stage startScreen) {
+					System.out.println("Article Menu");
+					startScreen.setTitle(String.format("Article Menu: Logged in as, %s", logged.username));
+					
+					//initialize a grid setup for the windows
+					BorderPane bPane = new BorderPane();
+					GridPane gridPane = new GridPane();
+					gridPane.setAlignment(Pos.CENTER);
+					
+					gridPane.setPadding(new Insets(5,5,5,5));
+					gridPane.setHgap(10);
+					gridPane.setVgap(10);
+					bPane.setCenter(gridPane);
+					
+					
+					// create a stack pane
+			        StackPane uWindow = new StackPane();
+			        
+			        
+			        Scene sc = new Scene(bPane, 900, 500);
+			        
+			      //Create Labels
+			        Label Article = new Label("Article Menu");
+			        //logout button
+			        Button back = new Button("Back");
+			        Button article = new Button("Create Article");
+			        Button view = new Button("View All Articles");
+			        Button up = new Button("Update Article");
+			        Button del = new Button("Delete Article(s)");
+			        Button ser = new Button("Search by Keyword");
+			        
+			        TextField tex = new TextField("Type Here");
+			        TextArea texArea = new TextArea("");
+			        texArea.setWrapText(true);
+			        
+			     // Add new Backup and Restore buttons for Phase 2 requirements
+				    Button backupBtn = new Button("Backup Data");
+				    Button restoreBtn = new Button("Restore Data");
+
+			        
+
+			        //Add all controls to Grid
+			        gridPane.add(Article, 0,0);
+			        gridPane.add(article, 1, 0);
+			        gridPane.add(view, 2, 0);
+			        gridPane.add(up, 0, 1);
+			        gridPane.add(del, 1, 1);
+			        gridPane.add(tex, 2, 1);
+			        gridPane.add(back, 3, 0);
+			        gridPane.add(ser, 3, 1);
+			        
+			        gridPane.add(texArea, 2, 2);
+			        
+			        gridPane.add(backupBtn, 3, 2);  // Add Backup button
+				    gridPane.add(restoreBtn, 3, 3);  // Add Restore button
+
+			        
+			        // set the scene
+			        startScreen.setScene(sc);
+			 
+			        startScreen.show();
+					
+					User structor = new User();
+					
+				    // Define actions for Backup and Restore buttons
+				    backupBtn.setOnAction((ActionEvent e) -> backupData());
+				    restoreBtn.setOnAction((ActionEvent e) -> restoreData());
+
+						view.setOnAction(new EventHandler<ActionEvent>()
+					    {
+					      @Override      
+					      //when the submit button is pressed
+					      public void handle(ActionEvent e)
+					      {
+					    	  databaseHelper = new DatabaseHelper();
+					  		try { 
+					  			
+					  			databaseHelper.connectToDatabase();  // Connect to the database
+
+					  			// Check if the database is empty
+					  			if (databaseHelper.isDatabaseEmpty()) {
+					  				System.out.println( "In-Memory Database  is empty" );
+					  				
+					  				
+					  			}
+					  			else {
+					  				texArea.setText(databaseHelper.displayByGroups(logged.groups));
+					  			}
+					  		}
+							 catch (Exception e1) {
+								System.err.println("Database error: " + e1.getMessage());
+								e1.printStackTrace();
+							}
+							finally {
+								//System.out.println("Good Bye!!");
+								databaseHelper.closeConnection();
+							}
+					      
+					      }	  
+					     });
+						
 						
 						del.setOnAction(new EventHandler<ActionEvent>()
 					    {
