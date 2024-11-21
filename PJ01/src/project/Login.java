@@ -678,15 +678,27 @@ public class Login extends Application{
 			upd.setOnAction((ActionEvent e) ->
 		    {
 		    	boolean check = false;
-		    	if(role.getText().equals("a") || role.getText().equals("i") || role.getText().equals("s")) {
+		    	char chr = 'o';
+		    	switch(role.getText()) {
+		    	case "a":
+		    		chr = 'a';
+		    		break;
+		    	case "s":
+		    		chr = 's';
+		    		break;
+		    	case "i":
+		    		chr = 'i';
+		    		break;
+		    	}
+		    	if(chr == 'a' || chr == 's' || chr == 'i') {
 		    		for (int i = 0; i < tem.roles.size(); i++) {
-		    		      if(role.getText().equals(tem.roles.get(i))) {
+		    		      if(chr == tem.roles.get(i)) {
 		    		    	  response.setText("User already has role");
 		    		    	  check = true;
 		    		      }
 		    		    }
 		    		if(check == false) {
-		    			users.get(tem.id).roles.add(role.getText().charAt(0));
+		    			users.get(tem.id).roles.add(chr);
 		    			response.setText("Roles Added!");
 		    		}
 		    	}
