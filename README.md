@@ -69,6 +69,8 @@ Contributions are welcome! Please fork the repository and create a pull request 
 - [Kalyanam Dewri](https://github.com/kalyanamdewri)
 - [Kage](https://github.com/Kage-Bot)
 - [Arnav Amin](https://github.com/aamin15)
+- [Arshit Thakur](https://github.com/athaku32)
+
 
 ## Acknowledgments
 
